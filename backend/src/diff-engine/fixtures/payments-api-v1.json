@@ -1,0 +1,75 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Payments API", "version": "1.0.0" },
+  "paths": {
+    "/payments": {
+      "post": {
+        "summary": "Initiate payment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount", "currency"],
+                "properties": {
+                  "amount": { "type": "integer" },
+                  "currency": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment initiated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "paymentId": { "type": "string" },
+                    "status": { "type": "string" },
+                    "redirectUrl": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "402": { "description": "Payment required" }
+        }
+      }
+    },
+    "/payments/{paymentId}/refund": {
+      "post": {
+        "summary": "Issue refund",
+        "responses": {
+          "200": { "description": "Refunded" },
+          "400": { "description": "Bad request" }
+        }
+      }
+    },
+    "/payments/{paymentId}/status": {
+      "get": {
+        "summary": "Get payment status",
+        "responses": {
+          "200": {
+            "description": "Status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "processedAt": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

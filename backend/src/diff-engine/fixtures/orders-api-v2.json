@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Orders API", "version": "2.0.0" },
+  "paths": {
+    "/orders": {
+      "post": {
+        "summary": "Create order",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["productId", "quantity", "shippingAddress"],
+                "properties": {
+                  "productId": { "type": "string" },
+                  "quantity": { "type": "integer" },
+                  "couponCode": { "type": "string" },
+                  "shippingAddress": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "orderId": { "type": "string" },
+                    "totalPrice": { "type": "number" },
+                    "currency": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{orderId}": {
+      "get": {
+        "summary": "Get order",
+        "responses": {
+          "200": {
+            "description": "Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "orderId": { "type": "string" },
+                    "status": {
+                      "type": "string",
+                      "enum": ["pending", "shipped", "delivered", "returned", "cancelled"]
+                    },
+                    "totalPrice": { "type": "integer" },
+                    "items": { "type": "array", "items": { "type": "object" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
