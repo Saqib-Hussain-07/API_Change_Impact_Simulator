@@ -10,17 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.25.1",
-    "react-query": "^3.39.3",
+    "@clerk/react": "^6.18.0",
     "axios": "^1.7.2",
-    "react-dropzone": "^14.2.3",
-    "react-hot-toast": "^2.4.1",
-    "recharts": "^2.12.7",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
-    "lucide-react": "^0.408.0"
+    "lucide-react": "^0.408.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-dropzone": "^14.2.3",
+    "react-hot-toast": "^2.4.1",
+    "react-query": "^3.39.3",
+    "react-router-dom": "^6.25.1",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
