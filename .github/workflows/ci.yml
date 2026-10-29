@@ -130,14 +130,19 @@ jobs:
     needs: [build]
     if: github.ref == 'refs/heads/main'
     steps:
+      # ── Deploy (Render) ───────────────────────────────────────────
       - name: Trigger Render deploy (backend)
-        if: ${{ secrets.RENDER_DEPLOY_HOOK_BACKEND != '' }}
+        env:
+          HOOK_BACKEND: ${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}
+        if: env.HOOK_BACKEND != ''
         run: |
-          curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK_BACKEND }}"
+          curl -s -X POST "$HOOK_BACKEND"
           echo "Backend deploy triggered"
 
       - name: Trigger Render deploy (frontend)
-        if: ${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND != '' }}
+        env:
+          HOOK_FRONTEND: ${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}
+        if: env.HOOK_FRONTEND != ''
         run: |
-          curl -s -X POST "${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}"
+          curl -s -X POST "$HOOK_FRONTEND"
           echo "Frontend deploy triggered"
