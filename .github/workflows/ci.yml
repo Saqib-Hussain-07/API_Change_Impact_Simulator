@@ -9,8 +9,8 @@ on:
 env:
   NODE_VERSION: '20'
   REGISTRY: ghcr.io
-  IMAGE_BACKEND: ${{ github.repository }}/backend
-  IMAGE_FRONTEND: ${{ github.repository }}/frontend
+  IMAGE_BACKEND: backend
+  IMAGE_FRONTEND: frontend
 
 jobs:
   # ── Lint ──────────────────────────────────────────────────────
@@ -105,14 +105,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Normalize repository name for image tags
+        id: image_repo
+        run: echo "name=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
       - name: Build and push backend image
         uses: docker/build-push-action@v5
         with:
           context: ./backend
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_BACKEND }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ steps.image_repo.outputs.name }}/${{ env.IMAGE_BACKEND }}:latest
+            ${{ env.REGISTRY }}/${{ steps.image_repo.outputs.name }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
@@ -120,8 +124,8 @@ jobs:
           context: ./frontend
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_FRONTEND }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ steps.image_repo.outputs.name }}/${{ env.IMAGE_FRONTEND }}:latest
+            ${{ env.REGISTRY }}/${{ steps.image_repo.outputs.name }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
 
   # ── Deploy (Render) ───────────────────────────────────────────
   deploy:
