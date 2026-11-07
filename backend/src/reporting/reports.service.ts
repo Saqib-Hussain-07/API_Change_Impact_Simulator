@@ -3,6 +3,36 @@ import { getDiffRunById } from '../diff-engine/diffs.service';
 import { createError } from '../middleware/errorHandler';
 import { auditLog } from '../utils/audit';
 
+export interface ReportSummary {
+  diffRunId: string;
+  generatedAt: string;
+  overview: {
+    totalChanges: number;
+    breaking: number;
+    warnings: number;
+    nonBreaking: number;
+    affectedConsumers: number;
+    testRunsTotal: number;
+    testRunsFailing: number;
+  };
+  breakingChanges: Array<{
+    id: string;
+    type: string;
+    endpoint: string;
+    field: string | null;
+    explanation: string;
+    affectedConsumers: Array<{ team: string; severity?: string }>;
+  }>;
+  warnings: Array<{
+    id: string;
+    type: string;
+    endpoint: string;
+    explanation: string;
+  }>;
+  testResults: Array<{ team: string; status: string; completedAt: string }>;
+  recommendations: string[];
+}
+
 /**
  * Generate (or retrieve) the migration checklist report for a diff run.
  * Aggregates: breaking changes, affected consumers, test results, recommended actions.
@@ -136,7 +166,7 @@ export async function signOffReport(
 }
 
 /** Convert report summary to a flat CSV string */
-function toCSV(summary: ReturnType<typeof buildSummaryShape>): string {
+function toCSV(summary: ReportSummary): string {
   const lines: string[] = ['Change Type,Classification,Endpoint,Field,Explanation,Affected Teams'];
 
   for (const c of summary.breakingChanges) {
@@ -171,6 +201,3 @@ function csvEscape(val: string): string {
   }
   return val;
 }
-
-// Type helper for TypeScript inference
-function buildSummaryShape(s: ReturnType<typeof generateReport>) { return s as never; }

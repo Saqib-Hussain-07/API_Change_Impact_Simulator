@@ -1,4 +1,4 @@
-import SwaggerParser from 'swagger-parser';
+import SwaggerParser from '@apidevtools/swagger-parser';
 import YAML from 'yaml';
 import { createError } from '../middleware/errorHandler';
 
@@ -23,7 +23,7 @@ export async function parseAndValidateSpec(raw: string): Promise<Record<string, 
 
   // Validate as OpenAPI 3.x (swagger-parser bundles validation)
   try {
-    await SwaggerParser.validate(structuredClone(parsed) as Parameters<typeof SwaggerParser.validate>[0]);
+    await SwaggerParser.validate(structuredClone(parsed) as unknown as Parameters<typeof SwaggerParser.validate>[0]);
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'OpenAPI validation failed';
     throw createError(`Invalid OpenAPI spec: ${msg}`, 422, 'INVALID_SPEC');
