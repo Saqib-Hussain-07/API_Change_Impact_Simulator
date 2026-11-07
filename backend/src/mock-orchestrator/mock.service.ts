@@ -224,7 +224,7 @@ async function runNewman(
 
           resolve({
             total: stats?.assertions?.total ?? 0,
-            passed: stats?.assertions?.total - stats?.assertions?.failed ?? 0,
+            passed: (stats?.assertions?.total ?? 0) - (stats?.assertions?.failed ?? 0),
             failed: stats?.assertions?.failed ?? 0,
             assertions,
           });
