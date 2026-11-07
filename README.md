@@ -12,7 +12,7 @@
 - [Architecture](#architecture)
 - [Tech Stack](#tech-stack)
 - [Prerequisites](#prerequisites)
-- [Quick Start (Docker)](#quick-start-docker)
+- [Quick Start](#quick-start)
 - [Local Development](#local-development)
 - [Demo Walkthrough](#demo-walkthrough)
 - [API Reference](#api-reference)
@@ -73,7 +73,6 @@ Data flow: `Upload Spec → Diff Engine → Classify → Consumer Cross-ref → 
 | Frontend | React 18 + Tailwind CSS 3 |
 | Mock Server | Prism (Stoplight) |
 | Test Runner | Newman (Postman CLI) |
-| Container | Docker + Docker Compose |
 | CI/CD | GitHub Actions |
 | Auth | JWT (15 min) + Refresh Tokens (7 days) |
 | Logging | pino (structured JSON) |
@@ -82,29 +81,33 @@ Data flow: `Upload Spec → Diff Engine → Classify → Consumer Cross-ref → 
 
 ## Prerequisites
 
-- **Docker Desktop** (recommended — one-command startup)  
-- OR: Node.js 20+, PostgreSQL 15+
+- **Node.js 20+** (LTS recommended)
+- **PostgreSQL 15+** (optional — embedded PGlite engine included)
 
 ---
 
-## Quick Start (Docker)
+## Quick Start
 
 ```bash
 # 1. Clone
 git clone https://github.com/Saqib-Hussain-07/API_Change_Impact_Simulator.git
 cd API_Change_Impact_Simulator
 
-# 2. Copy environment file
+# 2. Install dependencies
+npm install
+
+# 3. Set up environment
 cp .env.example .env
+# (Optional: customize DATABASE_URL in .env if using external PostgreSQL)
 
-# 3. Start all services
-docker compose up -d
+# 4. Run migrations and seed demo data
+npm run db:migrate --workspace=backend
+npm run db:seed --workspace=backend
 
-# 4. Run migrations + seed demo data
-docker compose exec backend node dist/db/migrate.js
-docker compose exec backend node dist/db/seed.js
+# 5. Start development servers (frontend + backend)
+npm run dev
 
-# 5. Open the app
+# 6. Open the app
 #    Frontend:  http://localhost:5173
 #    API:       http://localhost:4000
 #    Health:    http://localhost:4000/healthz
@@ -306,7 +309,6 @@ Copy `.env.example` to `.env` and fill in:
 API Change Impact Simulator/
 ├── .github/workflows/ci.yml      # GitHub Actions CI/CD
 ├── .env.example                   # Environment template
-├── docker-compose.yml             # Full stack local run
 ├── package.json                   # Root npm workspace
 │
 ├── backend/
@@ -331,7 +333,6 @@ API Change Impact Simulator/
 │   │   │   ├── seed.ts            # Demo data seeder
 │   │   │   └── migrations/        # SQL migration files
 │   │   └── utils/                 # Logger, audit helper
-│   └── Dockerfile
 │
 └── frontend/
     ├── src/
@@ -339,7 +340,6 @@ API Change Impact Simulator/
     │   ├── components/            # Layout (sidebar)
     │   ├── lib/api.ts             # Axios client with auto-refresh
     │   └── store/auth.store.ts    # Auth state (localStorage-backed)
-    └── Dockerfile
 ```
 
 ---
