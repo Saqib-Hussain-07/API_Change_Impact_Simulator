@@ -31,6 +31,10 @@ consumersRouter.post('/', authenticate, authorize('admin'), async (req: AuthRequ
 /** POST /api/v1/consumers/:consumerId/dependencies — register a dependency */
 consumersRouter.post('/:consumerId/dependencies', authenticate, async (req: AuthRequest, res, next) => {
   try {
+    const { role, teamId } = req.user!;
+    if (role !== 'admin' && teamId !== req.params.consumerId) {
+      return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Access denied to this consumer team', details: null } });
+    }
     const { endpointPath, httpMethod, fieldPath } = req.body;
     if (!endpointPath || !httpMethod) {
       return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'endpointPath and httpMethod required', details: null } });
@@ -57,6 +61,10 @@ consumersRouter.get('/:consumerId/dependencies', authenticate, async (req, res, 
 /** POST /api/v1/consumers/:consumerId/test-collections — upload a test collection */
 consumersRouter.post('/:consumerId/test-collections', authenticate, async (req: AuthRequest, res, next) => {
   try {
+    const { role, teamId } = req.user!;
+    if (role !== 'admin' && teamId !== req.params.consumerId) {
+      return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'Access denied to this consumer team', details: null } });
+    }
     const { name, collection } = req.body;
     if (!name || !collection) {
       return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'name and collection required', details: null } });

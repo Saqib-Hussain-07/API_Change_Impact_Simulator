@@ -166,7 +166,7 @@ export async function signOffReport(
 }
 
 /** Convert report summary to a flat CSV string */
-function toCSV(summary: ReportSummary): string {
+export function toCSV(summary: ReportSummary): string {
   const lines: string[] = ['Change Type,Classification,Endpoint,Field,Explanation,Affected Teams'];
 
   for (const c of summary.breakingChanges) {

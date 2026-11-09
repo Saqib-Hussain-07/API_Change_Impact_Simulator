@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { loginUser, refreshUserToken, registerUser } from './auth.service';
+import { authenticate, authorize } from './auth.middleware';
 
 export const authRouter = Router();
 
@@ -39,10 +40,10 @@ authRouter.post('/refresh', async (req, res, next) => {
 
 /**
  * POST /api/v1/auth/register
- * Admin-only in production; open for demo/seeding
+ * Admin-only: requires a valid admin JWT.
  * Body: { email, password, role, teamId? }
  */
-authRouter.post('/register', async (req, res, next) => {
+authRouter.post('/register', authenticate, authorize('admin'), async (req, res, next) => {
   try {
     const { email, password, role, teamId } = req.body;
     if (!email || !password || !role) {

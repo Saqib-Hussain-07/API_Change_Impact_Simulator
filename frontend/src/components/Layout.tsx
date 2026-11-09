@@ -78,7 +78,7 @@ export function Layout() {
         <div className="p-3 border-t border-white/10 bg-[#08080a]">
           <div className="flex items-center gap-2.5 p-2 rounded-lg border border-white/10 bg-black/40 mb-2">
             <div className="w-7 h-7 rounded-md bg-zinc-800 border border-white/15 flex items-center justify-center text-xs font-semibold text-white flex-shrink-0 font-mono">
-              {user?.email?.[0].toUpperCase()}
+              {user?.email?.[0]?.toUpperCase() ?? '?'}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium text-white truncate">{user?.email}</p>

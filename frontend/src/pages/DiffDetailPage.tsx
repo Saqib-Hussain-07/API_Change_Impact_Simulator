@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
-import { diffsApi } from '../lib/api';
+import { diffsApi, reportsApi } from '../lib/api';
 import { useAuthStore } from '../store/auth.store';
 import toast from 'react-hot-toast';
 import {
@@ -56,7 +56,7 @@ export function DiffDetailPage() {
   const qc = useQueryClient();
   const isAdmin = user?.role === 'admin';
 
-  const { data, isLoading } = useQuery(['diff', diffId], () => diffsApi.get(diffId!), {
+  const { data, isLoading, isError } = useQuery(['diff', diffId], () => diffsApi.get(diffId!), {
     refetchOnMount: true,
   });
   const [filter, setFilter] = useState<'ALL' | Classification>('ALL');
@@ -71,6 +71,15 @@ export function DiffDetailPage() {
         <div className="skeleton h-8 w-48 rounded-lg" />
         <div className="skeleton h-24 rounded-lg" />
         <div className="skeleton h-64 rounded-lg" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="glass-card p-10 text-center bg-[#09090b] border border-white/10">
+        <p className="text-sm font-semibold text-white mb-1">Failed to load diff</p>
+        <p className="text-xs text-zinc-400">The diff could not be loaded. Try refreshing the page.</p>
       </div>
     );
   }
@@ -111,11 +120,17 @@ export function DiffDetailPage() {
   }
 
   async function downloadCSV() {
-    const url = `/api/v1/diffs/${diffId}/report?format=csv`;
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `impact-report-${diffId}.csv`;
-    link.click();
+    try {
+      const response = await diffsApi.getCSV(diffId!);
+      const url = URL.createObjectURL(new Blob([response.data], { type: 'text/csv' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `impact-report-${diffId}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      toast.error('CSV export failed.');
+    }
   }
 
   return (
@@ -164,8 +179,8 @@ export function DiffDetailPage() {
         </div>
       </div>
 
-      {/* ── Metric Summary Cards ── */}
-      <div className="grid grid-cols-3 gap-3">
+      {/* ── Metric Summary Bento Grid ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         {(
           [
             ['BREAKING', breaking.length],
@@ -179,21 +194,28 @@ export function DiffDetailPage() {
             <button
               key={cls}
               onClick={() => setFilter(filter === cls ? 'ALL' : cls)}
-              className={`p-4 rounded-xl text-left transition-all border ${
+              className={`bento-card p-5 text-left transition-all ${
                 isActive
-                  ? 'bg-zinc-900 border-white text-white shadow-subtle'
-                  : 'bg-[#0c0c0e] border-white/10 hover:border-white/20'
+                  ? 'border-white/50 bg-[#141418] shadow-elevated'
+                  : 'hover:border-white/25'
               }`}
             >
-              <div className="flex items-center gap-2 mb-1.5">
-                <span className={`w-2 h-2 rounded-full ${cfg.dot}`} />
-                <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-zinc-300">
-                  {cfg.label}
-                </span>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${cfg.dot}`} />
+                  <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-zinc-300">
+                    {cfg.label}
+                  </span>
+                </div>
+                {isActive && (
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white text-black font-semibold">
+                    ACTIVE
+                  </span>
+                )}
               </div>
               <p className="text-3xl font-bold font-mono tracking-tight text-white">{count}</p>
               <p className="text-[10px] text-zinc-500 font-mono mt-1">
-                {isActive ? 'Showing filtered' : 'Click to filter'}
+                {isActive ? 'Filtered selection active' : 'Click to isolate classification'}
               </p>
             </button>
           );
@@ -250,7 +272,7 @@ export function DiffDetailPage() {
             return (
               <div
                 key={change.id}
-                className="glass-card bg-[#0b0b0d] border border-white/10 overflow-hidden transition-all"
+                className="bento-card overflow-hidden transition-all"
               >
                 <div
                   className="w-full flex items-start justify-between gap-3 p-4 cursor-pointer hover:bg-white/[0.02]"
@@ -345,7 +367,6 @@ function ReportPanel({
   async function signOff(decision: 'approved' | 'blocked') {
     setSignOffLoading(true);
     try {
-      const { reportsApi } = await import('../lib/api');
       await reportsApi.signOff(diffId, decision);
       toast.success(`Deployment release decision recorded: ${decision.toUpperCase()}`);
       onClose();

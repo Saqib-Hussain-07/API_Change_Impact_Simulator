@@ -4,9 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { FileText, Clock, CheckCircle2, AlertTriangle, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export function ReportsPage() {
-  const { data, isLoading } = useQuery('reports', () => reportsApi.list());
+  const { data, isLoading, isError } = useQuery('reports', () => reportsApi.list());
   const reports = data?.reports ?? [];
   const navigate = useNavigate();
+
+  const approvedCount = reports.filter((r: Record<string, unknown>) => r.decision === 'approved').length;
+  const blockedCount = reports.filter((r: Record<string, unknown>) => r.decision === 'blocked').length;
+  const pendingCount = reports.filter((r: Record<string, unknown>) => !r.decision).length;
 
   return (
     <div className="animate-fade-in space-y-6">
@@ -23,11 +27,41 @@ export function ReportsPage() {
         </p>
       </div>
 
+      {/* Bento Metric Tiles */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Total Reports
+          </span>
+          <p className="text-2xl font-bold font-mono text-white mt-1">{reports.length}</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">{pendingCount} pending architectural decisions</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Approved Releases
+          </span>
+          <p className="text-2xl font-bold font-mono text-emerald-400 mt-1">{approvedCount}</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Signed off for production deployment</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Blocked Releases
+          </span>
+          <p className="text-2xl font-bold font-mono text-rose-400 mt-1">{blockedCount}</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Breaking mutations or failing tests</span>
+        </div>
+      </div>
+
       {isLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div key={i} className="skeleton h-24 rounded-xl" />
           ))}
+        </div>
+      ) : isError ? (
+        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
+          <p className="text-sm font-semibold text-white mb-1">Failed to load reports</p>
+          <p className="text-xs text-zinc-400">Could not reach the server. Try refreshing the page.</p>
         </div>
       ) : reports.length === 0 ? (
         <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
@@ -46,7 +80,7 @@ export function ReportsPage() {
               <div
                 key={r.id as string}
                 onClick={() => navigate(`/diffs/${r.diff_run_id}`)}
-                className="glass-card p-5 bg-[#0b0b0d] border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
+                className="bento-card p-5 cursor-pointer group"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">

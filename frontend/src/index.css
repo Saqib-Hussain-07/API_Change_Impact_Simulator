@@ -60,7 +60,7 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* ── Architectural Card Surfaces ── */
+/* ── Architectural Card Surfaces & Bento Grid ── */
 .glass-card {
   background: #0d0d0f;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -70,6 +70,29 @@ body {
 
 .glass-card:hover {
   border-color: rgba(255, 255, 255, 0.16);
+}
+
+.bento-card {
+  position: relative;
+  background: #09090b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.bento-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: #0d0d10;
+}
+
+.bento-card-hero {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(9, 9, 11, 0.95) 100%), #09090b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.bento-card-hero:hover {
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .glass-panel {

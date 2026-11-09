@@ -11,7 +11,7 @@ export function SpecsPage() {
   const qc = useQueryClient();
   const isAdmin = user?.role === 'admin';
 
-  const { data, isLoading } = useQuery('specs', () => specsApi.list());
+  const { data, isLoading, isError } = useQuery('specs', () => specsApi.list());
   const specs = data?.specs ?? [];
 
   // Create spec modal
@@ -98,6 +98,34 @@ export function SpecsPage() {
         )}
       </div>
 
+      {/* Bento Metric Tiles */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Total Contracts
+          </span>
+          <p className="text-2xl font-bold font-mono text-white mt-1">{specs.length}</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Registered specifications</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Validation Standard
+          </span>
+          <p className="text-sm font-semibold text-white font-mono mt-2">OpenAPI 3.0 &bull; 3.1</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">JSON & YAML normalization</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Engine Mode
+          </span>
+          <div className="flex items-center gap-2 mt-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="text-sm font-semibold text-white font-mono">Immutable Snapshots</span>
+          </div>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Deterministic structural diffs</span>
+        </div>
+      </div>
+
       {/* Create spec modal */}
       {showCreate && (
         <Modal title="Register New API Specification" onClose={() => setShowCreate(false)}>
@@ -142,6 +170,11 @@ export function SpecsPage() {
             <div key={i} className="skeleton h-20 rounded-xl" />
           ))}
         </div>
+      ) : isError ? (
+        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
+          <p className="text-sm font-semibold text-white mb-1">Failed to load specifications</p>
+          <p className="text-xs text-zinc-400">Could not reach the server. Try refreshing the page.</p>
+        </div>
       ) : specs.length === 0 ? (
         <EmptyState
           icon={<FileCode className="w-8 h-8 text-zinc-600" />}
@@ -162,7 +195,7 @@ export function SpecsPage() {
       ) : (
         <div className="space-y-3">
           {specs.map((spec: Record<string, string>) => (
-            <div key={spec.id} className="glass-card bg-[#0b0b0d] border border-white/10 overflow-hidden">
+            <div key={spec.id} className="bento-card overflow-hidden">
               <div
                 className="p-4 px-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
                 onClick={() => setExpandedSpec(expandedSpec === spec.id ? null : spec.id)}

@@ -93,6 +93,11 @@ function flattenSchema(
       const nested = flattenSchema(prop, fullPath, prop.required ?? []);
       for (const [np, nv] of nested) result.set(np, nv);
     }
+    // Recurse into array item schemas
+    if (prop.type === 'array' && prop.items) {
+      const nested = flattenSchema(prop.items, `${fullPath}[]`, prop.items.required ?? []);
+      for (const [np, nv] of nested) result.set(np, nv);
+    }
   }
 
   return result;
@@ -179,6 +184,78 @@ export function diffSpecs(oldSpec: OASSpec, newSpec: OASSpec): AtomicChange[] {
     // R06: Auth tightened
     if (!hasSecurity(oldOp) && hasSecurity(newOp)) {
       changes.push({ changeType: 'auth_tightened', endpointPath, httpMethod });
+    }
+
+    // ── Parameter diff (query, path, header, cookie) ─────────
+    const oldParams = new Map((oldOp.parameters ?? []).map((p) => [`${p.in}:${p.name}`, p]));
+    const newParams = new Map((newOp.parameters ?? []).map((p) => [`${p.in}:${p.name}`, p]));
+
+    for (const [pk, oldP] of oldParams) {
+      const newP = newParams.get(pk);
+      if (!newP) {
+        // Parameter removed — breaking if it was required
+        if (oldP.required) {
+          changes.push({
+            changeType: 'request_field_now_required',
+            endpointPath,
+            httpMethod,
+            fieldPath: `param.${oldP.in}.${oldP.name}`,
+            oldValue: 'required',
+            newValue: 'removed',
+          });
+        }
+        continue;
+      }
+      // Required added
+      if (!oldP.required && newP.required) {
+        changes.push({
+          changeType: 'request_field_now_required',
+          endpointPath,
+          httpMethod,
+          fieldPath: `param.${oldP.in}.${oldP.name}`,
+        });
+      }
+      // Type changed
+      if (oldP.schema?.type && newP.schema?.type && oldP.schema.type !== newP.schema.type) {
+        changes.push({
+          changeType: 'field_type_changed',
+          endpointPath,
+          httpMethod,
+          fieldPath: `param.${oldP.in}.${oldP.name}`,
+          oldValue: oldP.schema.type,
+          newValue: newP.schema.type,
+        });
+      }
+      // Deprecated
+      if (!oldP.deprecated && newP.deprecated) {
+        changes.push({
+          changeType: 'field_deprecated',
+          endpointPath,
+          httpMethod,
+          fieldPath: `param.${oldP.in}.${oldP.name}`,
+        });
+      }
+    }
+
+    for (const [pk, newP] of newParams) {
+      if (!oldParams.has(pk)) {
+        // New required parameter added — breaking
+        if (newP.required) {
+          changes.push({
+            changeType: 'request_field_now_required',
+            endpointPath,
+            httpMethod,
+            fieldPath: `param.${newP.in}.${newP.name}`,
+          });
+        } else {
+          changes.push({
+            changeType: 'request_field_added_optional',
+            endpointPath,
+            httpMethod,
+            fieldPath: `param.${newP.in}.${newP.name}`,
+          });
+        }
+      }
     }
 
     // R05: Status codes removed

@@ -12,7 +12,7 @@ export function DiffsPage() {
   const qc = useQueryClient();
   const navigate = useNavigate();
 
-  const { data: diffsData, isLoading: diffsLoading } = useQuery('diffs', () => diffsApi.list());
+  const { data: diffsData, isLoading: diffsLoading, isError: diffsError } = useQuery('diffs', () => diffsApi.list());
   const { data: specsData } = useQuery('specs', () => specsApi.list());
   const diffs = diffsData?.diffs ?? [];
   const specs = specsData?.specs ?? [];
@@ -68,6 +68,37 @@ export function DiffsPage() {
             <span>New Diff Run</span>
           </button>
         )}
+      </div>
+
+      {/* Bento Metric Tiles */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Total Executions
+          </span>
+          <p className="text-2xl font-bold font-mono text-white mt-1">{diffs.length}</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Recorded pairwise diff runs</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Classification Engine
+          </span>
+          <div className="flex items-center gap-2 mt-2 font-mono text-xs">
+            <span className="text-rose-400">Breaking</span>
+            <span className="text-zinc-600">&bull;</span>
+            <span className="text-amber-400">Warning</span>
+            <span className="text-zinc-600">&bull;</span>
+            <span className="text-emerald-400">Safe</span>
+          </div>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Automated severity classification</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Coverage Scope
+          </span>
+          <p className="text-sm font-semibold text-white font-mono mt-2">Query &bull; Path &bull; Body &bull; Status</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Recursive array item flattening</span>
+        </div>
       </div>
 
       {/* New diff modal */}
@@ -189,6 +220,11 @@ export function DiffsPage() {
             <div key={i} className="skeleton h-20 rounded-xl" />
           ))}
         </div>
+      ) : diffsError ? (
+        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
+          <p className="text-sm font-semibold text-white mb-1">Failed to load diff runs</p>
+          <p className="text-xs text-zinc-400">Could not reach the server. Try refreshing the page.</p>
+        </div>
       ) : diffs.length === 0 ? (
         <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
           <GitCompare className="w-8 h-8 text-zinc-600 mx-auto mb-3" />
@@ -203,7 +239,7 @@ export function DiffsPage() {
           )}
         </div>
       ) : (
-        <div className="glass-card bg-[#0b0b0d] border border-white/10 overflow-hidden divide-y divide-white/5">
+        <div className="bento-card overflow-hidden divide-y divide-white/5">
           {diffs.map((d: Record<string, string>) => (
             <div
               key={d.id}

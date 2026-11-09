@@ -269,4 +269,141 @@ describe('diffSpecs edge cases', () => {
     const structural = changes.filter((c) => c.changeType !== 'description_changed');
     expect(structural).toHaveLength(0);
   });
+
+  it('detects added required query and path parameters as BREAKING', () => {
+    const oldSpec = {
+      paths: {
+        '/items': {
+          get: {
+            parameters: [
+              { name: 'limit', in: 'query', required: false, schema: { type: 'integer' } },
+            ],
+            responses: { '200': { description: 'ok' } },
+          },
+        },
+      },
+    };
+    const newSpec = {
+      paths: {
+        '/items': {
+          get: {
+            parameters: [
+              { name: 'limit', in: 'query', required: false, schema: { type: 'integer' } },
+              { name: 'api_key', in: 'query', required: true, schema: { type: 'string' } },
+            ],
+            responses: { '200': { description: 'ok' } },
+          },
+        },
+      },
+    };
+    const changes = classifyChanges(diffSpecs(oldSpec, newSpec));
+    const apiKey = changes.find((c) => c.fieldPath === 'param.query.api_key');
+    expect(apiKey).toBeDefined();
+    expect(apiKey!.classification).toBe('BREAKING');
+  });
+
+  it('detects parameter type changes and deprecations', () => {
+    const oldSpec = {
+      paths: {
+        '/items/{id}': {
+          get: {
+            parameters: [
+              { name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
+            ],
+            responses: { '200': { description: 'ok' } },
+          },
+        },
+      },
+    };
+    const newSpec = {
+      paths: {
+        '/items/{id}': {
+          get: {
+            parameters: [
+              { name: 'id', in: 'path', required: true, deprecated: true, schema: { type: 'string' } },
+            ],
+            responses: { '200': { description: 'ok' } },
+          },
+        },
+      },
+    };
+    const changes = classifyChanges(diffSpecs(oldSpec, newSpec));
+    const typeChange = changes.find((c) => c.changeType === 'field_type_changed' && c.fieldPath === 'param.path.id');
+    const deprecated = changes.find((c) => c.changeType === 'field_deprecated' && c.fieldPath === 'param.path.id');
+    expect(typeChange).toBeDefined();
+    expect(typeChange!.classification).toBe('BREAKING');
+    expect(deprecated).toBeDefined();
+    expect(deprecated!.classification).toBe('WARNING');
+  });
+
+  it('detects changes in nested array item schemas', () => {
+    const oldSpec = {
+      paths: {
+        '/items': {
+          get: {
+            responses: {
+              '200': {
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        tags: {
+                          type: 'array',
+                          items: {
+                            type: 'object',
+                            properties: {
+                              id: { type: 'integer' },
+                              name: { type: 'string' },
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const newSpec = {
+      paths: {
+        '/items': {
+          get: {
+            responses: {
+              '200': {
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        tags: {
+                          type: 'array',
+                          items: {
+                            type: 'object',
+                            properties: {
+                              id: { type: 'string' }, // type changed integer -> string
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const changes = classifyChanges(diffSpecs(oldSpec, newSpec));
+    const removedField = changes.find((c) => c.changeType === 'response_field_removed' && c.fieldPath?.includes('tags[].name'));
+    const typeChange = changes.find((c) => c.changeType === 'field_type_changed' && c.fieldPath?.includes('tags[].id'));
+    expect(removedField).toBeDefined();
+    expect(removedField!.classification).toBe('BREAKING');
+    expect(typeChange).toBeDefined();
+    expect(typeChange!.classification).toBe('BREAKING');
+  });
 });

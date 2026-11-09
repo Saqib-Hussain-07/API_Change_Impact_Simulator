@@ -1,5 +1,6 @@
 import { spawn } from 'child_process';
 import * as fs from 'fs';
+import * as net from 'net';
 import * as path from 'path';
 import * as os from 'os';
 import { query } from '../db/client';
@@ -7,8 +8,19 @@ import { createError } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
 import { auditLog } from '../utils/audit';
 
-const PRISM_PORT = parseInt(process.env.PRISM_PORT ?? '4010', 10);
 const TMP_DIR = os.tmpdir();
+
+/** Bind to port 0 and immediately close to get a free ephemeral port */
+function getFreePort(): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const srv = net.createServer();
+    srv.listen(0, () => {
+      const port = (srv.address() as net.AddressInfo).port;
+      srv.close((err) => (err ? reject(err) : resolve(port)));
+    });
+    srv.on('error', reject);
+  });
+}
 
 /**
  * Trigger mock server (Prism) + Newman test run for a given diff run.
@@ -52,8 +64,9 @@ export async function triggerMockRun(
   const specPath = path.join(TMP_DIR, `prism-spec-${diffRunId}.json`);
   fs.writeFileSync(specPath, JSON.stringify(specRows[0].raw_spec), 'utf8');
 
-  // Start Prism mock server
-  const prismProcess = await startPrism(specPath);
+  // Start Prism mock server on a free ephemeral port to avoid EADDRINUSE on concurrent runs
+  const prismPort = await getFreePort();
+  const prismProcess = await startPrism(specPath, prismPort);
 
   const results: Array<{ testRunId: string; teamName: string; status: string }> = [];
 
@@ -85,7 +98,7 @@ export async function triggerMockRun(
       try {
         const newmanResult = await runNewman(
           team.collection_json,
-          `http://localhost:${PRISM_PORT}`,
+          `http://localhost:${prismPort}`,
         );
 
         const status = newmanResult.failed === 0 ? 'passed' : 'failed';
@@ -125,11 +138,11 @@ export async function triggerMockRun(
 }
 
 /** Start Prism mock server and wait for it to be ready */
-async function startPrism(specPath: string): Promise<ReturnType<typeof spawn>> {
+async function startPrism(specPath: string, port: number): Promise<ReturnType<typeof spawn>> {
   return new Promise((resolve, reject) => {
     const proc = spawn(
       'npx',
-      ['@stoplight/prism-cli', 'mock', specPath, '--port', String(PRISM_PORT), '--host', '0.0.0.0'],
+      ['@stoplight/prism-cli', 'mock', specPath, '--port', String(port), '--host', '0.0.0.0'],
       { stdio: 'pipe', shell: true },
     );
 
@@ -144,7 +157,7 @@ async function startPrism(specPath: string): Promise<ReturnType<typeof spawn>> {
     proc.stdout?.on('data', (data: Buffer) => {
       const text = data.toString();
       logger.debug({ text }, 'Prism stdout');
-      if (text.includes('Prism is listening') || text.includes(String(PRISM_PORT))) {
+      if (text.includes('Prism is listening') || text.includes(String(port))) {
         if (!ready) {
           ready = true;
           clearTimeout(timeout);

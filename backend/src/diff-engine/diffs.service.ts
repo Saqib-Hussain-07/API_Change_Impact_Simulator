@@ -1,4 +1,4 @@
-import { query } from '../db/client';
+import { query, pool } from '../db/client';
 import { diffSpecs } from './openapi-differ';
 import { classifyChanges, type ClassifiedChange } from '../classification-rules';
 import { getSpecVersionById } from '../specs/specs.service';
@@ -80,26 +80,36 @@ export async function triggerDiffRun(
     // Delete old change items if re-running (force)
     await query('DELETE FROM change_items WHERE diff_run_id = $1', [diffRunId]);
 
-    // Persist change items
+    // Persist change items in a single transaction to avoid partial saves
+    const client = await pool.connect();
     const savedChanges: Array<ClassifiedChange & { id: string }> = [];
-    for (const change of classifiedChanges) {
-      const { rows } = await query<{ id: string }>(
-        `INSERT INTO change_items(diff_run_id, change_type, classification, endpoint_path, http_method, field_path, explanation, old_value, new_value)
-         VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
-         RETURNING id`,
-        [
-          diffRunId,
-          change.changeType,
-          change.classification,
-          change.endpointPath ?? null,
-          change.httpMethod ?? null,
-          change.fieldPath ?? null,
-          change.explanation,
-          change.oldValue !== undefined ? JSON.stringify(change.oldValue) : null,
-          change.newValue !== undefined ? JSON.stringify(change.newValue) : null,
-        ],
-      );
-      savedChanges.push({ ...change, id: rows[0].id });
+    try {
+      await client.query('BEGIN');
+      for (const change of classifiedChanges) {
+        const { rows } = await client.query<{ id: string }>(
+          `INSERT INTO change_items(diff_run_id, change_type, classification, endpoint_path, http_method, field_path, explanation, old_value, new_value)
+           VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
+           RETURNING id`,
+          [
+            diffRunId,
+            change.changeType,
+            change.classification,
+            change.endpointPath ?? null,
+            change.httpMethod ?? null,
+            change.fieldPath ?? null,
+            change.explanation,
+            change.oldValue !== undefined ? JSON.stringify(change.oldValue) : null,
+            change.newValue !== undefined ? JSON.stringify(change.newValue) : null,
+          ],
+        );
+        savedChanges.push({ ...change, id: rows[0].id });
+      }
+      await client.query('COMMIT');
+    } catch (txErr) {
+      await client.query('ROLLBACK');
+      throw txErr;
+    } finally {
+      client.release();
     }
 
     // Cross-reference with consumer registry

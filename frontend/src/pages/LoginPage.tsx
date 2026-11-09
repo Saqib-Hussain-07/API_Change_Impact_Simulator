@@ -56,7 +56,7 @@ export function LoginPage() {
         </div>
 
         {/* Login Box */}
-        <div className="glass-card p-6 bg-[#0a0a0c] border border-white/10 shadow-elevated">
+        <div className="bento-card bento-card-hero p-6 shadow-elevated">
           {/* Quick Demo Switcher */}
           <div className="mb-5 p-2.5 rounded-lg bg-black/60 border border-white/10">
             <p className="text-[10px] uppercase font-mono text-zinc-400 mb-2 font-semibold tracking-wider">

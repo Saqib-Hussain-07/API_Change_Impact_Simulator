@@ -10,7 +10,7 @@ export function ConsumersPage() {
   const isAdmin = user?.role === 'admin';
   const qc = useQueryClient();
 
-  const { data, isLoading } = useQuery('consumers', () => consumersApi.list());
+  const { data, isLoading, isError } = useQuery('consumers', () => consumersApi.list());
   const teams = data?.teams ?? [];
 
   const [showCreate, setShowCreate] = useState(false);
@@ -78,6 +78,34 @@ export function ConsumersPage() {
         )}
       </div>
 
+      {/* Bento Metric Tiles */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Consumer Index
+          </span>
+          <p className="text-2xl font-bold font-mono text-white mt-1">{teams.length}</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Registered downstream teams</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Blast Radius Mapping
+          </span>
+          <p className="text-sm font-semibold text-white font-mono mt-2">Endpoint &bull; Field Granularity</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Active dependency cross-referencing</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Contract Verification
+          </span>
+          <div className="flex items-center gap-2 mt-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="text-sm font-semibold text-white font-mono">Newman Test Suites</span>
+          </div>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Automated simulation harness</span>
+        </div>
+      </div>
+
       {/* Create team modal */}
       {showCreate && (
         <div
@@ -133,6 +161,11 @@ export function ConsumersPage() {
             <div key={i} className="skeleton h-20 rounded-xl" />
           ))}
         </div>
+      ) : isError ? (
+        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
+          <p className="text-sm font-semibold text-white mb-1">Failed to load consumer teams</p>
+          <p className="text-xs text-zinc-400">Could not reach the server. Try refreshing the page.</p>
+        </div>
       ) : teams.length === 0 ? (
         <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
           <Users className="w-8 h-8 text-zinc-600 mx-auto mb-3" />
@@ -149,7 +182,7 @@ export function ConsumersPage() {
       ) : (
         <div className="space-y-3">
           {teams.map((team: Record<string, string | number>) => (
-            <div key={team.id} className="glass-card bg-[#0b0b0d] border border-white/10 overflow-hidden">
+            <div key={team.id} className="bento-card overflow-hidden">
               <div
                 className="p-4 px-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
                 onClick={() => setExpanded(expanded === team.id ? null : (team.id as string))}
@@ -167,17 +200,19 @@ export function ConsumersPage() {
                 </div>
 
                 <div className="flex items-center gap-2.5">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowDepForm(team.id as string);
-                      setExpanded(team.id as string);
-                    }}
-                    className="btn btn-secondary text-xs py-1 px-2.5"
-                  >
-                    <Link2 className="w-3 h-3" />
-                    <span>Add Dependency</span>
-                  </button>
+                  {isAdmin && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDepForm(team.id as string);
+                        setExpanded(team.id as string);
+                      }}
+                      className="btn btn-secondary text-xs py-1 px-2.5"
+                    >
+                      <Link2 className="w-3 h-3" />
+                      <span>Add Dependency</span>
+                    </button>
+                  )}
                   <button className="text-zinc-500 hover:text-white transition-colors">
                     {expanded === team.id ? (
                       <ChevronDown className="w-4 h-4" />

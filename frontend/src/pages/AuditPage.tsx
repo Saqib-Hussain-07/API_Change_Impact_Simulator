@@ -3,7 +3,7 @@ import { reportsApi } from '../lib/api';
 import { ClipboardList, Clock, User, Terminal } from 'lucide-react';
 
 export function AuditPage() {
-  const { data, isLoading } = useQuery('audit', () => reportsApi.auditLog());
+  const { data, isLoading, isError } = useQuery('audit', () => reportsApi.auditLog());
   const logs = data?.logs ?? [];
 
   return (
@@ -21,11 +21,44 @@ export function AuditPage() {
         </p>
       </div>
 
+      {/* Bento Metric Tiles */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Total Audit Records
+          </span>
+          <p className="text-2xl font-bold font-mono text-white mt-1">{logs.length}</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Recorded timeline mutations</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Log Guarantee
+          </span>
+          <div className="flex items-center gap-2 mt-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span className="text-sm font-semibold text-white font-mono">Append-Only Immutability</span>
+          </div>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Cryptographic event auditing</span>
+        </div>
+        <div className="bento-card p-4">
+          <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
+            Actor Resolution
+          </span>
+          <p className="text-sm font-semibold text-white font-mono mt-2">JWT Subject &bull; Email Attribution</p>
+          <span className="text-[11px] text-zinc-400 mt-0.5 block">Audit trails mapped to users</span>
+        </div>
+      </div>
+
       {isLoading ? (
         <div className="space-y-2">
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="skeleton h-12 rounded-lg" />
           ))}
+        </div>
+      ) : isError ? (
+        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
+          <p className="text-sm font-semibold text-white mb-1">Failed to load audit log</p>
+          <p className="text-xs text-zinc-400">Could not reach the server. Try refreshing the page.</p>
         </div>
       ) : logs.length === 0 ? (
         <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
@@ -36,7 +69,7 @@ export function AuditPage() {
           </p>
         </div>
       ) : (
-        <div className="glass-card bg-[#0b0b0d] border border-white/10 overflow-hidden divide-y divide-white/5 font-mono">
+        <div className="bento-card overflow-hidden divide-y divide-white/5 font-mono">
           {logs.map((log: Record<string, unknown>) => {
             const action = (log.action_type as string) ?? 'ACTION';
             return (

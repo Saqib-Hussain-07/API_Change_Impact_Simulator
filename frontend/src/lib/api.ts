@@ -70,6 +70,8 @@ export const diffsApi = {
   get: (diffId: string) => api.get(`/diffs/${diffId}`).then((r) => r.data),
   triggerMockRun: (diffId: string) => api.post(`/diffs/${diffId}/mock-run`).then((r) => r.data),
   getReport: (diffId: string) => api.get(`/diffs/${diffId}/report`).then((r) => r.data),
+  getCSV: (diffId: string) =>
+    api.get(`/diffs/${diffId}/report`, { params: { format: 'csv' }, responseType: 'blob' }),
   acknowledge: (diffId: string, impactId: string, action: string, reason?: string) =>
     api.post(`/diffs/${diffId}/acknowledge`, { impactId, action, reason }).then((r) => r.data),
 };
