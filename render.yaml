@@ -8,7 +8,7 @@ services:
   # ── Backend Web Service ──────────────────────────────────────
   - type: web
     name: api-impact-backend
-    env: node
+    runtime: node
     plan: free
     buildCommand: npm install && npm run build --workspace=backend && node backend/dist/db/migrate.js && node backend/dist/db/seed.js
     startCommand: npm run start --workspace=backend
@@ -39,8 +39,7 @@ services:
   # ── Frontend Static Site ─────────────────────────────────────
   - type: web
     name: api-impact-frontend
-    env: static
-    plan: free
+    runtime: static
     buildCommand: npm install && npm run build --workspace=frontend
     staticPublishPath: frontend/dist
     routes:
