@@ -12,7 +12,15 @@ async function main() {
   });
 }
 
-main().catch((err) => {
-  logger.error(err, 'Fatal startup error');
-  process.exit(1);
-});
+// Only start standalone HTTP server when not running in Vercel serverless environment
+if (!process.env.VERCEL) {
+  main().catch((err) => {
+    logger.error(err, 'Fatal startup error');
+    process.exit(1);
+  });
+}
+
+export default app;
+// CommonJS export compatibility for @vercel/node:
+module.exports = app;
+module.exports.default = app;
