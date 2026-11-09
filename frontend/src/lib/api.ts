@@ -1,7 +1,10 @@
 import axios from 'axios';
 import { authActions } from '../store/auth.store';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
+const rawBase = import.meta.env.VITE_API_BASE_URL ?? '';
+const BASE_URL = rawBase && !rawBase.startsWith('http://') && !rawBase.startsWith('https://')
+  ? `https://${rawBase}`
+  : rawBase;
 
 export const api = axios.create({
   baseURL: `${BASE_URL}/api/v1`,

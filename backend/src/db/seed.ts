@@ -17,8 +17,10 @@ import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import { pool, query } from './client';
 import { logger } from '../utils/logger';
-import * as fs from 'fs';
-import * as path from 'path';
+import userV1 from '../diff-engine/fixtures/user-service-v1.json';
+import userV2 from '../diff-engine/fixtures/user-service-v2.json';
+import paymentsV1 from '../diff-engine/fixtures/payments-api-v1.json';
+import paymentsV2 from '../diff-engine/fixtures/payments-api-v2.json';
 
 async function seed() {
   logger.info('Starting database seed...');
@@ -106,13 +108,6 @@ async function seed() {
   }
 
   // ── Spec Versions ─────────────────────────────────────────────
-  const fixturesDir = path.join(__dirname, '../diff-engine/fixtures');
-
-  const userV1 = JSON.parse(fs.readFileSync(path.join(fixturesDir, 'user-service-v1.json'), 'utf8'));
-  const userV2 = JSON.parse(fs.readFileSync(path.join(fixturesDir, 'user-service-v2.json'), 'utf8'));
-  const paymentsV1 = JSON.parse(fs.readFileSync(path.join(fixturesDir, 'payments-api-v1.json'), 'utf8'));
-  const paymentsV2 = JSON.parse(fs.readFileSync(path.join(fixturesDir, 'payments-api-v2.json'), 'utf8'));
-
   const { rows: uv1Rows } = await query<{ id: string }>(
     `INSERT INTO spec_versions(spec_id, version_label, uploaded_by, raw_spec, file_size)
      VALUES($1, '1.0.0', $2, $3, $4)

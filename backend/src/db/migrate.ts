@@ -20,7 +20,9 @@ async function migrate(): Promise<void> {
       );
     `);
 
-    const migrationsDir = path.join(__dirname, 'migrations');
+    const migrationsDir = fs.existsSync(path.join(__dirname, 'migrations'))
+      ? path.join(__dirname, 'migrations')
+      : path.join(__dirname, '../../src/db/migrations');
     const files = fs
       .readdirSync(migrationsDir)
       .filter((f) => f.endsWith('.sql'))

@@ -134,7 +134,9 @@ async function autoMigrateAndSeed(db: any): Promise<void> {
     );
   `);
 
-  const migrationsDir = path.join(__dirname, 'migrations');
+  const migrationsDir = fs.existsSync(path.join(__dirname, 'migrations'))
+    ? path.join(__dirname, 'migrations')
+    : path.join(__dirname, '../../src/db/migrations');
   if (fs.existsSync(migrationsDir)) {
     const files = fs.readdirSync(migrationsDir).filter((f) => f.endsWith('.sql')).sort();
     for (const file of files) {

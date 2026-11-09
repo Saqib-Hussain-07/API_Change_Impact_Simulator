@@ -13,7 +13,11 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
-app.use(cors({ origin: process.env.FRONTEND_URL ?? true, credentials: true }));
+const rawFrontend = process.env.FRONTEND_URL;
+const allowedOrigin = rawFrontend
+  ? (rawFrontend.startsWith('http') ? rawFrontend : `https://${rawFrontend}`).replace(/\/$/, '')
+  : true;
+app.use(cors({ origin: allowedOrigin, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
