@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { logger } from '../utils/logger';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as os from 'os';
 
 interface QueryResult<T extends object = Record<string, unknown>> {
   rows: T[];
@@ -36,9 +37,18 @@ pgPool.on('error', (err) => {
 async function getPgliteInstance() {
   if (!pgliteInstance) {
     const { PGlite } = await import('@electric-sql/pglite');
-    const dataDir = path.resolve(__dirname, '../../data/pglite');
-    fs.mkdirSync(dataDir, { recursive: true });
-    pgliteInstance = new PGlite(dataDir);
+    const defaultDir =
+      process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME
+        ? path.join(os.tmpdir(), 'pglite')
+        : path.resolve(process.cwd(), 'data/pglite');
+    const dataDir = process.env.PGLITE_DATA_DIR || defaultDir;
+    try {
+      fs.mkdirSync(dataDir, { recursive: true });
+      pgliteInstance = new PGlite(dataDir);
+    } catch (dirErr) {
+      logger.warn({ err: dirErr }, 'Could not create PGlite directory, falling back to in-memory database');
+      pgliteInstance = new PGlite();
+    }
   }
   return pgliteInstance;
 }
@@ -134,10 +144,16 @@ async function autoMigrateAndSeed(db: any): Promise<void> {
     );
   `);
 
-  const migrationsDir = fs.existsSync(path.join(__dirname, 'migrations'))
-    ? path.join(__dirname, 'migrations')
-    : path.join(__dirname, '../../src/db/migrations');
-  if (fs.existsSync(migrationsDir)) {
+  const candidateDirs = [
+    path.join(__dirname, 'migrations'),
+    path.join(__dirname, '../../src/db/migrations'),
+    path.join(process.cwd(), 'src/db/migrations'),
+    path.join(process.cwd(), 'backend/src/db/migrations'),
+    path.join(process.cwd(), 'dist/db/migrations'),
+    path.join(process.cwd(), 'backend/dist/db/migrations'),
+  ];
+  const migrationsDir = candidateDirs.find((d) => fs.existsSync(d) && fs.readdirSync(d).some((f) => f.endsWith('.sql')));
+  if (migrationsDir) {
     const files = fs.readdirSync(migrationsDir).filter((f) => f.endsWith('.sql')).sort();
     for (const file of files) {
       const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');

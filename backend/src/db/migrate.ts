@@ -20,9 +20,18 @@ async function migrate(): Promise<void> {
       );
     `);
 
-    const migrationsDir = fs.existsSync(path.join(__dirname, 'migrations'))
-      ? path.join(__dirname, 'migrations')
-      : path.join(__dirname, '../../src/db/migrations');
+    const candidateDirs = [
+      path.join(__dirname, 'migrations'),
+      path.join(__dirname, '../../src/db/migrations'),
+      path.join(process.cwd(), 'src/db/migrations'),
+      path.join(process.cwd(), 'backend/src/db/migrations'),
+      path.join(process.cwd(), 'dist/db/migrations'),
+      path.join(process.cwd(), 'backend/dist/db/migrations'),
+    ];
+    const migrationsDir = candidateDirs.find((d) => fs.existsSync(d) && fs.readdirSync(d).some((f) => f.endsWith('.sql')));
+    if (!migrationsDir) {
+      throw new Error('Migrations directory not found in candidate paths');
+    }
     const files = fs
       .readdirSync(migrationsDir)
       .filter((f) => f.endsWith('.sql'))
