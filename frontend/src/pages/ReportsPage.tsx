@@ -13,16 +13,16 @@ export function ReportsPage() {
   const pendingCount = reports.filter((r: Record<string, unknown>) => !r.decision).length;
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="animate-fade-in space-y-6 text-black">
       {/* Header */}
-      <div className="pb-6 border-b border-white/10">
+      <div className="pb-6 border-b border-black/10">
         <div className="flex items-center gap-2 mb-1">
-          <span className="font-mono text-xs px-2 py-0.5 rounded bg-white/10 text-zinc-300 border border-white/10">
+          <span className="font-mono text-xs px-2 py-0.5 rounded bg-black/5 text-zinc-800 border border-black/10 font-semibold">
             Audit & Compliance
           </span>
         </div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">API Migration & Sign-Off Reports</h1>
-        <p className="text-xs text-zinc-400 mt-1">
+        <h1 className="text-2xl font-bold text-black tracking-tight">API Migration & Sign-Off Reports</h1>
+        <p className="text-xs text-zinc-600 mt-1">
           Formal sign-off records, release gates, and architectural risk assessments
         </p>
       </div>
@@ -33,22 +33,22 @@ export function ReportsPage() {
           <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
             Total Reports
           </span>
-          <p className="text-2xl font-bold font-mono text-white mt-1">{reports.length}</p>
-          <span className="text-[11px] text-zinc-400 mt-0.5 block">{pendingCount} pending architectural decisions</span>
+          <p className="text-2xl font-bold font-mono text-black mt-1">{reports.length}</p>
+          <span className="text-[11px] text-zinc-600 mt-0.5 block">{pendingCount} pending architectural decisions</span>
         </div>
         <div className="bento-card p-4">
           <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
             Approved Releases
           </span>
-          <p className="text-2xl font-bold font-mono text-emerald-400 mt-1">{approvedCount}</p>
-          <span className="text-[11px] text-zinc-400 mt-0.5 block">Signed off for production deployment</span>
+          <p className="text-2xl font-bold font-mono text-black mt-1">{approvedCount}</p>
+          <span className="text-[11px] text-zinc-600 mt-0.5 block">Signed off for production deployment</span>
         </div>
         <div className="bento-card p-4">
           <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
             Blocked Releases
           </span>
-          <p className="text-2xl font-bold font-mono text-rose-400 mt-1">{blockedCount}</p>
-          <span className="text-[11px] text-zinc-400 mt-0.5 block">Breaking mutations or failing tests</span>
+          <p className="text-2xl font-bold font-mono text-zinc-800 mt-1">{blockedCount}</p>
+          <span className="text-[11px] text-zinc-600 mt-0.5 block">Breaking mutations or failing tests</span>
         </div>
       </div>
 
@@ -59,15 +59,15 @@ export function ReportsPage() {
           ))}
         </div>
       ) : isError ? (
-        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
-          <p className="text-sm font-semibold text-white mb-1">Failed to load reports</p>
-          <p className="text-xs text-zinc-400">Could not reach the server. Try refreshing the page.</p>
+        <div className="glass-card p-12 text-center bg-white border border-black/10">
+          <p className="text-sm font-semibold text-black mb-1">Failed to load reports</p>
+          <p className="text-xs text-zinc-600">Could not reach the server. Try refreshing the page.</p>
         </div>
       ) : reports.length === 0 ? (
-        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
-          <FileText className="w-8 h-8 text-zinc-600 mx-auto mb-3" />
-          <p className="text-sm font-semibold text-white mb-1">No sign-off reports recorded</p>
-          <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+        <div className="glass-card p-12 text-center bg-white border border-black/10">
+          <FileText className="w-8 h-8 text-zinc-400 mx-auto mb-3" />
+          <p className="text-sm font-semibold text-black mb-1">No sign-off reports recorded</p>
+          <p className="text-xs text-zinc-600 max-w-sm mx-auto">
             Reports and release decisions are generated during diff review workflows.
           </p>
         </div>
@@ -86,17 +86,17 @@ export function ReportsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-2 flex-wrap">
                       {decision === 'approved' ? (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-950/40 text-emerald-300 border border-emerald-800/40 text-[11px] font-mono font-bold">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-black text-white font-semibold text-[11px] font-mono border border-black">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                           <span>APPROVED FOR RELEASE</span>
                         </span>
                       ) : decision === 'blocked' ? (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-rose-950/40 text-rose-300 border border-rose-800/40 text-[11px] font-mono font-bold">
-                          <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-zinc-100 text-black font-bold border border-black text-[11px] font-mono">
+                          <AlertTriangle className="w-3.5 h-3.5 text-black" />
                           <span>BLOCKED PENDING FIXES</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-white/10 text-[11px] font-mono">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-zinc-100 text-zinc-700 border border-black/10 text-[11px] font-mono font-medium">
                           <ShieldCheck className="w-3.5 h-3.5" />
                           <span>PENDING DECISION</span>
                         </span>
@@ -109,21 +109,21 @@ export function ReportsPage() {
 
                     {overview && (
                       <div className="flex items-center gap-3 font-mono text-xs flex-wrap mt-2">
-                        <span className="text-rose-400 font-semibold">
+                        <span className="text-black font-bold">
                           {overview.breaking} Breaking
                         </span>
-                        <span className="text-zinc-600">&bull;</span>
-                        <span className="text-amber-400 font-semibold">
+                        <span className="text-zinc-400">&bull;</span>
+                        <span className="text-zinc-700 font-semibold">
                           {overview.warnings} Warnings
                         </span>
-                        <span className="text-zinc-600">&bull;</span>
-                        <span className="text-zinc-300">
+                        <span className="text-zinc-400">&bull;</span>
+                        <span className="text-zinc-600">
                           {overview.affectedConsumers} Consumers Affected
                         </span>
                         {(overview.testRunsFailing as number) > 0 && (
                           <>
-                            <span className="text-zinc-600">&bull;</span>
-                            <span className="text-rose-400 font-bold">
+                            <span className="text-zinc-400">&bull;</span>
+                            <span className="text-black font-bold">
                               {overview.testRunsFailing} Mock Suites Failed
                             </span>
                           </>
@@ -137,13 +137,13 @@ export function ReportsPage() {
                       {r.approved_by_email && (
                         <>
                           <span>&bull;</span>
-                          <span>Authorized by <span className="text-zinc-300">{r.approved_by_email as string}</span></span>
+                          <span>Authorized by <span className="text-black font-medium">{r.approved_by_email as string}</span></span>
                         </>
                       )}
                     </div>
                   </div>
 
-                  <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors flex-shrink-0 mt-1" />
+                  <ArrowRight className="w-4 h-4 text-zinc-400 group-hover:text-black transition-colors flex-shrink-0 mt-1" />
                 </div>
               </div>
             );

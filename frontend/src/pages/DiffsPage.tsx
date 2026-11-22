@@ -48,17 +48,17 @@ export function DiffsPage() {
   );
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="animate-fade-in space-y-6 text-black">
       {/* Header */}
-      <div className="flex items-center justify-between pb-6 border-b border-white/10">
+      <div className="flex items-center justify-between pb-6 border-b border-black/10">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-mono text-xs px-2 py-0.5 rounded bg-white/10 text-zinc-300 border border-white/10">
+            <span className="font-mono text-xs px-2 py-0.5 rounded bg-black/5 text-zinc-800 border border-black/10 font-semibold">
               Diff Engine
             </span>
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Contract Diff Executions</h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <h1 className="text-2xl font-bold text-black tracking-tight">Contract Diff Executions</h1>
+          <p className="text-xs text-zinc-600 mt-1">
             Pairwise structural comparison and breaking change classification
           </p>
         </div>
@@ -76,51 +76,51 @@ export function DiffsPage() {
           <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
             Total Executions
           </span>
-          <p className="text-2xl font-bold font-mono text-white mt-1">{diffs.length}</p>
-          <span className="text-[11px] text-zinc-400 mt-0.5 block">Recorded pairwise diff runs</span>
+          <p className="text-2xl font-bold font-mono text-black mt-1">{diffs.length}</p>
+          <span className="text-[11px] text-zinc-600 mt-0.5 block">Recorded pairwise diff runs</span>
         </div>
         <div className="bento-card p-4">
           <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
             Classification Engine
           </span>
           <div className="flex items-center gap-2 mt-2 font-mono text-xs">
-            <span className="text-rose-400">Breaking</span>
-            <span className="text-zinc-600">&bull;</span>
-            <span className="text-amber-400">Warning</span>
-            <span className="text-zinc-600">&bull;</span>
-            <span className="text-emerald-400">Safe</span>
+            <span className="text-black font-bold">Breaking</span>
+            <span className="text-zinc-400">&bull;</span>
+            <span className="text-zinc-700 font-medium">Warning</span>
+            <span className="text-zinc-400">&bull;</span>
+            <span className="text-zinc-600">Safe</span>
           </div>
-          <span className="text-[11px] text-zinc-400 mt-0.5 block">Automated severity classification</span>
+          <span className="text-[11px] text-zinc-600 mt-0.5 block">Automated severity classification</span>
         </div>
         <div className="bento-card p-4">
           <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
             Coverage Scope
           </span>
-          <p className="text-sm font-semibold text-white font-mono mt-2">Query &bull; Path &bull; Body &bull; Status</p>
-          <span className="text-[11px] text-zinc-400 mt-0.5 block">Recursive array item flattening</span>
+          <p className="text-sm font-bold text-black font-mono mt-2">Query &bull; Path &bull; Body &bull; Status</p>
+          <span className="text-[11px] text-zinc-600 mt-0.5 block">Recursive array item flattening</span>
         </div>
       </div>
 
       {/* New diff modal */}
       {showNew && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
           onClick={() => setShowNew(false)}
         >
           <div
-            className="glass-card w-full max-w-lg p-6 bg-[#0c0c0e] border border-white/15 shadow-modal animate-slide-up"
+            className="glass-card w-full max-w-lg p-6 bg-white border border-black/15 shadow-xl animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
-              <h2 className="text-sm font-semibold text-white tracking-tight">Compare Contract Snapshots</h2>
-              <button onClick={() => setShowNew(false)} className="text-zinc-400 hover:text-white">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-black/10">
+              <h2 className="text-sm font-bold text-black tracking-tight">Compare Contract Snapshots</h2>
+              <button onClick={() => setShowNew(false)} className="text-zinc-500 hover:text-black">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-800 mb-1.5">
                   Select API Specification
                 </label>
                 <select
@@ -145,8 +145,8 @@ export function DiffsPage() {
                 <>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                        Baseline Version <span className="text-rose-400">*</span>
+                      <label className="block text-xs font-semibold text-zinc-800 mb-1.5">
+                        Baseline Version <span className="text-black font-bold">*</span>
                       </label>
                       <select
                         className="input text-xs font-mono"
@@ -163,8 +163,8 @@ export function DiffsPage() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                        Proposed Version <span className="text-rose-400">*</span>
+                      <label className="block text-xs font-semibold text-zinc-800 mb-1.5">
+                        Proposed Version <span className="text-black font-bold">*</span>
                       </label>
                       <select
                         className="input text-xs font-mono"
@@ -182,15 +182,15 @@ export function DiffsPage() {
                   </div>
 
                   {oldVersionId && newVersionId && (
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-950 border border-white/10 text-xs font-mono">
-                      <span className="text-zinc-300 font-semibold">
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-50 border border-black/10 text-xs font-mono">
+                      <span className="text-zinc-800 font-semibold">
                         v{versions.find((v: Record<string, string>) => v.id === oldVersionId)?.versionLabel}
                       </span>
                       <ArrowRight className="w-3.5 h-3.5 text-zinc-500" />
-                      <span className="text-white font-bold">
+                      <span className="text-black font-bold">
                         v{versions.find((v: Record<string, string>) => v.id === newVersionId)?.versionLabel}
                       </span>
-                      <span className="text-zinc-500 ml-auto">Ready to compare</span>
+                      <span className="text-zinc-500 ml-auto font-medium">Ready to compare</span>
                     </div>
                   )}
                 </>
@@ -221,15 +221,15 @@ export function DiffsPage() {
           ))}
         </div>
       ) : diffsError ? (
-        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
-          <p className="text-sm font-semibold text-white mb-1">Failed to load diff runs</p>
-          <p className="text-xs text-zinc-400">Could not reach the server. Try refreshing the page.</p>
+        <div className="glass-card p-12 text-center bg-white border border-black/10">
+          <p className="text-sm font-semibold text-black mb-1">Failed to load diff runs</p>
+          <p className="text-xs text-zinc-600">Could not reach the server. Try refreshing the page.</p>
         </div>
       ) : diffs.length === 0 ? (
-        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
-          <GitCompare className="w-8 h-8 text-zinc-600 mx-auto mb-3" />
-          <p className="text-sm font-semibold text-white mb-1">No diff executions recorded</p>
-          <p className="text-xs text-zinc-400 max-w-sm mx-auto mb-5">
+        <div className="glass-card p-12 text-center bg-white border border-black/10">
+          <GitCompare className="w-8 h-8 text-zinc-400 mx-auto mb-3" />
+          <p className="text-sm font-semibold text-black mb-1">No diff executions recorded</p>
+          <p className="text-xs text-zinc-600 max-w-sm mx-auto mb-5">
             Compare two versions of an OpenAPI specification to classify breaking changes and affected consumers.
           </p>
           {isAdmin && (
@@ -239,26 +239,26 @@ export function DiffsPage() {
           )}
         </div>
       ) : (
-        <div className="bento-card overflow-hidden divide-y divide-white/5">
+        <div className="bento-card overflow-hidden divide-y divide-black/10">
           {diffs.map((d: Record<string, string>) => (
             <div
               key={d.id}
               onClick={() => navigate(`/diffs/${d.id}`)}
-              className="p-4 px-5 flex items-center justify-between hover:bg-white/[0.03] transition-colors cursor-pointer group"
+              className="p-4 px-5 flex items-center justify-between hover:bg-black/[0.02] transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-3.5 min-w-0">
                 <DiffStatusIcon status={d.status} />
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-xs font-semibold text-white tracking-tight truncate">
+                    <p className="text-xs font-semibold text-black tracking-tight truncate">
                       {d.spec_name ?? 'API Spec'}
                     </p>
                     <div className="flex items-center gap-1 font-mono text-[11px]">
-                      <span className="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/10 text-zinc-300">
+                      <span className="px-1.5 py-0.5 rounded bg-zinc-100 border border-black/10 text-zinc-800">
                         {d.old_label}
                       </span>
-                      <span className="text-zinc-600">&rarr;</span>
-                      <span className="px-1.5 py-0.5 rounded bg-zinc-900 border border-white/10 text-white font-semibold">
+                      <span className="text-zinc-400">&rarr;</span>
+                      <span className="px-1.5 py-0.5 rounded bg-zinc-100 border border-black/10 text-black font-semibold">
                         {d.new_label}
                       </span>
                     </div>
@@ -272,7 +272,7 @@ export function DiffsPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 text-zinc-500 group-hover:text-white transition-colors">
+              <div className="flex items-center gap-2 text-zinc-500 group-hover:text-black transition-colors font-medium">
                 <span className="text-xs font-mono hidden sm:inline">Inspect &rarr;</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
@@ -287,21 +287,21 @@ export function DiffsPage() {
 function DiffStatusIcon({ status }: { status: string }) {
   if (status === 'completed') {
     return (
-      <div className="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center flex-shrink-0">
-        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+      <div className="w-6 h-6 rounded-md bg-black border border-black flex items-center justify-center flex-shrink-0">
+        <CheckCircle2 className="w-3.5 h-3.5 text-white" />
       </div>
     );
   }
   if (status === 'running') {
     return (
-      <div className="w-6 h-6 rounded-md bg-amber-500/10 border border-amber-500/30 flex items-center justify-center flex-shrink-0 animate-pulse">
-        <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+      <div className="w-6 h-6 rounded-md bg-zinc-100 border border-zinc-400 flex items-center justify-center flex-shrink-0">
+        <AlertTriangle className="w-3.5 h-3.5 text-black" />
       </div>
     );
   }
   return (
-    <div className="w-6 h-6 rounded-md bg-zinc-800 border border-white/10 flex items-center justify-center flex-shrink-0">
-      <AlertCircle className="w-3.5 h-3.5 text-zinc-400" />
+    <div className="w-6 h-6 rounded-md bg-zinc-100 border border-black/10 flex items-center justify-center flex-shrink-0">
+      <AlertCircle className="w-3.5 h-3.5 text-zinc-500" />
     </div>
   );
 }

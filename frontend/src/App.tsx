@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './store/auth.store';
 import { Layout } from './components/Layout';
 import { LoginPage } from './pages/LoginPage';
+import { LandingPageWrapped } from './pages/LandingPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { SpecsPage } from './pages/SpecsPage';
 import { DiffsPage } from './pages/DiffsPage';
@@ -18,9 +19,14 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <Routes>
+      {/* Public Landing & Auth */}
+      <Route path="/" element={<LandingPageWrapped />} />
+      <Route path="/landing" element={<LandingPageWrapped />} />
       <Route path="/login" element={<LoginPage />} />
+
+      {/* Authenticated Workspace */}
       <Route
-        path="/"
+        path="/app"
         element={
           <PrivateRoute>
             <Layout />
@@ -35,6 +41,18 @@ export default function App() {
         <Route path="reports" element={<ReportsPage />} />
         <Route path="audit" element={<AuditPage />} />
       </Route>
+
+      {/* Backward-compatibility redirects */}
+      <Route path="/dashboard" element={<Navigate to="/app" replace />} />
+      <Route path="/specs" element={<Navigate to="/app/specs" replace />} />
+      <Route path="/diffs" element={<Navigate to="/app/diffs" replace />} />
+      <Route path="/diffs/:diffId" element={<Navigate to="/app/diffs/:diffId" replace />} />
+      <Route path="/consumers" element={<Navigate to="/app/consumers" replace />} />
+      <Route path="/reports" element={<Navigate to="/app/reports" replace />} />
+      <Route path="/audit" element={<Navigate to="/app/audit" replace />} />
+
+      {/* Catch-all */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

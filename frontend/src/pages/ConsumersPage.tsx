@@ -56,17 +56,17 @@ export function ConsumersPage() {
   );
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="animate-fade-in space-y-6 text-black">
       {/* Header */}
-      <div className="flex items-center justify-between pb-6 border-b border-white/10">
+      <div className="flex items-center justify-between pb-6 border-b border-black/10">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-mono text-xs px-2 py-0.5 rounded bg-white/10 text-zinc-300 border border-white/10">
+            <span className="font-mono text-xs px-2 py-0.5 rounded bg-black/5 text-zinc-800 border border-black/10 font-semibold">
               Registry
             </span>
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Downstream Consumer Teams</h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <h1 className="text-2xl font-bold text-black tracking-tight">Downstream Consumer Teams</h1>
+          <p className="text-xs text-zinc-600 mt-1">
             Index of service consumers, endpoint contracts, and field dependencies
           </p>
         </div>
@@ -84,49 +84,49 @@ export function ConsumersPage() {
           <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
             Consumer Index
           </span>
-          <p className="text-2xl font-bold font-mono text-white mt-1">{teams.length}</p>
-          <span className="text-[11px] text-zinc-400 mt-0.5 block">Registered downstream teams</span>
+          <p className="text-2xl font-bold font-mono text-black mt-1">{teams.length}</p>
+          <span className="text-[11px] text-zinc-600 mt-0.5 block">Registered downstream teams</span>
         </div>
         <div className="bento-card p-4">
           <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
             Blast Radius Mapping
           </span>
-          <p className="text-sm font-semibold text-white font-mono mt-2">Endpoint &bull; Field Granularity</p>
-          <span className="text-[11px] text-zinc-400 mt-0.5 block">Active dependency cross-referencing</span>
+          <p className="text-sm font-bold text-black font-mono mt-2">Endpoint &bull; Field Granularity</p>
+          <span className="text-[11px] text-zinc-600 mt-0.5 block">Active dependency cross-referencing</span>
         </div>
         <div className="bento-card p-4">
           <span className="text-[10px] font-mono uppercase text-zinc-500 font-semibold tracking-wider">
             Contract Verification
           </span>
           <div className="flex items-center gap-2 mt-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
-            <span className="text-sm font-semibold text-white font-mono">Newman Test Suites</span>
+            <span className="w-2 h-2 rounded-full bg-black" />
+            <span className="text-sm font-bold text-black font-mono">Newman Test Suites</span>
           </div>
-          <span className="text-[11px] text-zinc-400 mt-0.5 block">Automated simulation harness</span>
+          <span className="text-[11px] text-zinc-600 mt-0.5 block">Automated simulation harness</span>
         </div>
       </div>
 
       {/* Create team modal */}
       {showCreate && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
           onClick={() => setShowCreate(false)}
         >
           <div
-            className="glass-card w-full max-w-md p-6 bg-[#0c0c0e] border border-white/15 shadow-modal animate-slide-up"
+            className="glass-card w-full max-w-md p-6 bg-white border border-black/15 shadow-xl animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
-              <h2 className="text-sm font-semibold text-white tracking-tight">Register Consumer Team</h2>
-              <button onClick={() => setShowCreate(false)} className="text-zinc-400 hover:text-white">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-black/10">
+              <h2 className="text-sm font-bold text-black tracking-tight">Register Consumer Team</h2>
+              <button onClick={() => setShowCreate(false)} className="text-zinc-500 hover:text-black">
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                  Team Name <span className="text-rose-400">*</span>
+                <label className="block text-xs font-semibold text-zinc-800 mb-1.5">
+                  Team Name <span className="text-black font-bold">*</span>
                 </label>
                 <input
                   className="input text-xs"
@@ -162,15 +162,15 @@ export function ConsumersPage() {
           ))}
         </div>
       ) : isError ? (
-        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
-          <p className="text-sm font-semibold text-white mb-1">Failed to load consumer teams</p>
-          <p className="text-xs text-zinc-400">Could not reach the server. Try refreshing the page.</p>
+        <div className="glass-card p-12 text-center bg-white border border-black/10">
+          <p className="text-sm font-semibold text-black mb-1">Failed to load consumer teams</p>
+          <p className="text-xs text-zinc-600">Could not reach the server. Try refreshing the page.</p>
         </div>
       ) : teams.length === 0 ? (
-        <div className="glass-card p-12 text-center bg-[#09090b] border border-white/10">
-          <Users className="w-8 h-8 text-zinc-600 mx-auto mb-3" />
-          <p className="text-sm font-semibold text-white mb-1">No consumer teams registered</p>
-          <p className="text-xs text-zinc-400 max-w-sm mx-auto mb-5">
+        <div className="glass-card p-12 text-center bg-white border border-black/10">
+          <Users className="w-8 h-8 text-zinc-400 mx-auto mb-3" />
+          <p className="text-sm font-semibold text-black mb-1">No consumer teams registered</p>
+          <p className="text-xs text-zinc-600 max-w-sm mx-auto mb-5">
             Register teams that consume your APIs to track breaking change blast radiuses.
           </p>
           {isAdmin && (
@@ -184,15 +184,15 @@ export function ConsumersPage() {
           {teams.map((team: Record<string, string | number>) => (
             <div key={team.id} className="bento-card overflow-hidden">
               <div
-                className="p-4 px-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                className="p-4 px-5 flex items-center justify-between gap-4 cursor-pointer hover:bg-black/[0.02] transition-colors"
                 onClick={() => setExpanded(expanded === team.id ? null : (team.id as string))}
               >
                 <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/15 flex items-center justify-center font-mono font-bold text-white text-xs flex-shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-zinc-100 border border-black/15 flex items-center justify-center font-mono font-bold text-black text-xs flex-shrink-0">
                     {(team.name as string)[0]}
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-white text-xs tracking-tight truncate">{team.name}</p>
+                    <p className="font-semibold text-black text-xs tracking-tight truncate">{team.name}</p>
                     <p className="text-[11px] text-zinc-500 font-mono mt-0.5">
                       {team.dependency_count ?? 0} contract dependencies registered
                     </p>
@@ -213,7 +213,7 @@ export function ConsumersPage() {
                       <span>Add Dependency</span>
                     </button>
                   )}
-                  <button className="text-zinc-500 hover:text-white transition-colors">
+                  <button className="text-zinc-500 hover:text-black transition-colors">
                     {expanded === team.id ? (
                       <ChevronDown className="w-4 h-4" />
                     ) : (
@@ -224,23 +224,23 @@ export function ConsumersPage() {
               </div>
 
               {expanded === team.id && (
-                <div className="border-t border-white/10 bg-black/40">
+                <div className="border-t border-black/10 bg-zinc-50/50">
                   {/* Add dependency form */}
                   {showDepForm === team.id && (
-                    <div className="p-5 border-b border-white/10 bg-zinc-950/70">
+                    <div className="p-5 border-b border-black/10 bg-white">
                       <div className="max-w-xl mx-auto space-y-4">
                         <div className="flex items-center justify-between">
-                          <h3 className="text-xs font-semibold text-white font-mono uppercase tracking-wider">
+                          <h3 className="text-xs font-bold text-black font-mono uppercase tracking-wider">
                             Declare Dependency for {team.name}
                           </h3>
-                          <button onClick={() => setShowDepForm(null)} className="text-zinc-400 hover:text-white">
+                          <button onClick={() => setShowDepForm(null)} className="text-zinc-500 hover:text-black">
                             <X className="w-3.5 h-3.5" />
                           </button>
                         </div>
 
                         <div className="grid grid-cols-3 gap-3">
                           <div>
-                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">Method</label>
+                            <label className="block text-xs font-semibold text-zinc-800 mb-1.5">Method</label>
                             <select
                               className="input text-xs font-mono font-bold"
                               value={depMethod}
@@ -254,8 +254,8 @@ export function ConsumersPage() {
                             </select>
                           </div>
                           <div className="col-span-2">
-                            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-                              Endpoint Path <span className="text-rose-400">*</span>
+                            <label className="block text-xs font-semibold text-zinc-800 mb-1.5">
+                              Endpoint Path <span className="text-black font-bold">*</span>
                             </label>
                             <input
                               className="input text-xs font-mono"
@@ -267,7 +267,7 @@ export function ConsumersPage() {
                         </div>
 
                         <div>
-                          <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+                          <label className="block text-xs font-semibold text-zinc-800 mb-1.5">
                             Specific Field Path <span className="text-zinc-500 font-normal">(optional)</span>
                           </label>
                           <input
@@ -326,21 +326,21 @@ function DependencyList({ teamId }: { teamId: string }) {
   }
 
   return (
-    <div className="divide-y divide-white/5 font-mono text-xs">
+    <div className="divide-y divide-black/10 font-mono text-xs">
       {deps.map((d: Record<string, string>) => (
-        <div key={d.id} className="px-5 py-2.5 flex items-center justify-between hover:bg-white/[0.02]">
+        <div key={d.id} className="px-5 py-2.5 flex items-center justify-between hover:bg-black/[0.02]">
           <div className="flex items-center gap-3">
             <span className={`badge-method badge-method-${d.http_method?.toLowerCase()}`}>
               {d.http_method}
             </span>
-            <span className="text-white font-medium">{d.endpoint_path}</span>
+            <span className="text-black font-semibold">{d.endpoint_path}</span>
             {d.field_path && (
-              <span className="code-inline text-[11px] text-zinc-400">
+              <span className="code-inline text-[11px] text-zinc-700">
                 field: {d.field_path}
               </span>
             )}
           </div>
-          <span className="text-[10px] text-zinc-600 uppercase">Monitored</span>
+          <span className="text-[10px] text-zinc-500 uppercase font-semibold">Monitored</span>
         </div>
       ))}
     </div>

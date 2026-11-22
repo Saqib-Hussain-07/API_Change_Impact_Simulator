@@ -28,24 +28,24 @@ const classConfig: Record<
 > = {
   BREAKING: {
     label: 'Breaking',
-    dot: 'bg-rose-500',
-    text: 'text-rose-300',
-    bg: 'bg-[#150709]',
-    border: 'border-rose-900/40',
+    dot: 'bg-black',
+    text: 'text-white',
+    bg: 'bg-black',
+    border: 'border-black',
   },
   WARNING: {
     label: 'Warning',
-    dot: 'bg-amber-500',
-    text: 'text-amber-300',
-    bg: 'bg-[#151006]',
-    border: 'border-amber-900/40',
+    dot: 'bg-zinc-700',
+    text: 'text-black font-semibold',
+    bg: 'bg-zinc-100',
+    border: 'border-black/20',
   },
   NON_BREAKING: {
     label: 'Non-Breaking',
-    dot: 'bg-emerald-500',
-    text: 'text-emerald-300',
-    bg: 'bg-[#06150c]',
-    border: 'border-emerald-900/40',
+    dot: 'bg-zinc-400',
+    text: 'text-zinc-700',
+    bg: 'bg-zinc-50',
+    border: 'border-black/10',
   },
 };
 
@@ -77,9 +77,9 @@ export function DiffDetailPage() {
 
   if (isError) {
     return (
-      <div className="glass-card p-10 text-center bg-[#09090b] border border-white/10">
-        <p className="text-sm font-semibold text-white mb-1">Failed to load diff</p>
-        <p className="text-xs text-zinc-400">The diff could not be loaded. Try refreshing the page.</p>
+      <div className="glass-card p-10 text-center bg-white border border-black/10">
+        <p className="text-sm font-semibold text-black mb-1">Failed to load diff</p>
+        <p className="text-xs text-zinc-600">The diff could not be loaded. Try refreshing the page.</p>
       </div>
     );
   }
@@ -134,22 +134,22 @@ export function DiffDetailPage() {
   }
 
   return (
-    <div className="animate-fade-in space-y-6">
+    <div className="animate-fade-in space-y-6 text-black">
       {/* ── Top Navigation Bar ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-black/10">
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate('/diffs')}
-            className="w-8 h-8 rounded-lg bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-400 hover:text-white hover:border-white/20 transition-all"
+            className="w-8 h-8 rounded-lg bg-zinc-100 border border-black/10 flex items-center justify-center text-zinc-700 hover:text-black hover:border-black/30 transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-xs text-zinc-500 uppercase">Analysis ID:</span>
-              <span className="font-mono text-xs text-white font-medium">{diffId?.slice(0, 8)}</span>
+              <span className="font-mono text-xs text-zinc-500 uppercase font-semibold">Analysis ID:</span>
+              <span className="font-mono text-xs text-black font-bold">{diffId?.slice(0, 8)}</span>
             </div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Contract Diff & Impact Report</h1>
+            <h1 className="text-xl font-bold text-black tracking-tight">Contract Diff & Impact Report</h1>
           </div>
         </div>
 
@@ -196,24 +196,24 @@ export function DiffDetailPage() {
               onClick={() => setFilter(filter === cls ? 'ALL' : cls)}
               className={`bento-card p-5 text-left transition-all ${
                 isActive
-                  ? 'border-white/50 bg-[#141418] shadow-elevated'
-                  : 'hover:border-white/25'
+                  ? 'border-black bg-zinc-50 shadow-md ring-1 ring-black'
+                  : 'hover:border-black/25'
               }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <span className={`w-2 h-2 rounded-full ${cfg.dot}`} />
-                  <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-zinc-300">
+                  <span className="text-[11px] font-mono uppercase tracking-wider font-bold text-zinc-800">
                     {cfg.label}
                   </span>
                 </div>
                 {isActive && (
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white text-black font-semibold">
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black text-white font-bold">
                     ACTIVE
                   </span>
                 )}
               </div>
-              <p className="text-3xl font-bold font-mono tracking-tight text-white">{count}</p>
+              <p className="text-3xl font-bold font-mono tracking-tight text-black">{count}</p>
               <p className="text-[10px] text-zinc-500 font-mono mt-1">
                 {isActive ? 'Filtered selection active' : 'Click to isolate classification'}
               </p>
@@ -234,15 +234,15 @@ export function DiffDetailPage() {
 
       {/* ── Filter Bar ── */}
       <div className="flex items-center justify-between pt-2">
-        <div className="flex items-center gap-1.5 p-1 rounded-lg bg-zinc-950 border border-white/10">
+        <div className="flex items-center gap-1.5 p-1 rounded-lg bg-zinc-100 border border-black/10">
           {(['ALL', 'BREAKING', 'WARNING', 'NON_BREAKING'] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
               className={`text-xs px-2.5 py-1 rounded font-mono transition-all ${
                 filter === f
-                  ? 'bg-white text-black font-semibold shadow-subtle'
-                  : 'text-zinc-400 hover:text-white'
+                  ? 'bg-black text-white font-semibold shadow-xs'
+                  : 'text-zinc-600 hover:text-black'
               }`}
             >
               {f === 'ALL' ? 'All' : classConfig[f].label}
@@ -261,9 +261,9 @@ export function DiffDetailPage() {
       {/* ── Changes List ── */}
       <div className="space-y-2.5">
         {filtered.length === 0 ? (
-          <div className="glass-card p-10 text-center bg-[#09090b] border border-white/10">
-            <CheckCircle2 className="w-8 h-8 text-zinc-600 mx-auto mb-2" />
-            <p className="text-xs text-zinc-400 font-mono">No change mutations in this classification category</p>
+          <div className="glass-card p-10 text-center bg-white border border-black/10">
+            <CheckCircle2 className="w-8 h-8 text-zinc-400 mx-auto mb-2" />
+            <p className="text-xs text-zinc-600 font-mono">No change mutations in this classification category</p>
           </div>
         ) : (
           filtered.map((change) => {
@@ -275,7 +275,7 @@ export function DiffDetailPage() {
                 className="bento-card overflow-hidden transition-all"
               >
                 <div
-                  className="w-full flex items-start justify-between gap-3 p-4 cursor-pointer hover:bg-white/[0.02]"
+                  className="w-full flex items-start justify-between gap-3 p-4 cursor-pointer hover:bg-black/[0.02]"
                   onClick={() => setExpanded(isOpen ? null : change.id)}
                 >
                   <div className="flex items-start gap-3 min-w-0">
@@ -285,32 +285,32 @@ export function DiffDetailPage() {
                         <span className={`badge-method badge-method-${change.httpMethod?.toLowerCase()}`}>
                           {change.httpMethod?.toUpperCase()}
                         </span>
-                        <span className="text-xs font-mono font-semibold text-white">
+                        <span className="text-xs font-mono font-bold text-black">
                           {change.endpointPath}
                         </span>
                         {change.fieldPath && (
-                          <span className="code-inline text-[11px] text-zinc-300">
+                          <span className="code-inline text-[11px] text-zinc-800 font-semibold">
                             {change.fieldPath}
                           </span>
                         )}
                         <span
-                          className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${cfg.bg} ${cfg.border} ${cfg.text} font-semibold`}
+                          className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${cfg.bg} ${cfg.border} ${cfg.text}`}
                         >
                           {change.changeType.replace(/_/g, ' ')}
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-300 leading-relaxed font-sans">{change.explanation}</p>
+                      <p className="text-xs text-zinc-700 leading-relaxed font-sans">{change.explanation}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3 flex-shrink-0 mt-0.5">
                     {change.affectedConsumers.length > 0 && (
-                      <span className="text-[11px] font-mono text-rose-400 bg-rose-950/30 border border-rose-900/40 px-2 py-0.5 rounded flex items-center gap-1.5">
+                      <span className="text-[11px] font-mono text-black bg-zinc-100 border border-black/20 px-2 py-0.5 rounded flex items-center gap-1.5 font-semibold">
                         <Users className="w-3 h-3" />
                         <span>{change.affectedConsumers.length} affected</span>
                       </span>
                     )}
-                    <button className="text-zinc-500 hover:text-white">
+                    <button className="text-zinc-500 hover:text-black">
                       {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                     </button>
                   </div>
@@ -318,21 +318,21 @@ export function DiffDetailPage() {
 
                 {/* Expanded Consumer Breakdown */}
                 {isOpen && change.affectedConsumers.length > 0 && (
-                  <div className="px-4 py-3 bg-black/40 border-t border-white/5 space-y-2">
-                    <p className="text-[11px] font-mono uppercase text-zinc-400 tracking-wider font-semibold">
+                  <div className="px-4 py-3 bg-zinc-50 border-t border-black/10 space-y-2">
+                    <p className="text-[11px] font-mono uppercase text-zinc-600 tracking-wider font-bold">
                       Downstream Affected Consumers
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {change.affectedConsumers.map((ac, i) => (
                         <div
                           key={i}
-                          className="flex items-center justify-between p-2 rounded bg-zinc-950 border border-white/10 text-xs font-mono"
+                          className="flex items-center justify-between p-2 rounded bg-white border border-black/10 text-xs font-mono shadow-xs"
                         >
                           <div className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
-                            <span className="text-white font-medium">{ac.teamName}</span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-black" />
+                            <span className="text-black font-semibold">{ac.teamName}</span>
                           </div>
-                          <span className="text-[10px] uppercase font-bold text-rose-300 px-1.5 py-0.5 rounded bg-rose-950/50 border border-rose-900/30">
+                          <span className="text-[10px] uppercase font-bold text-white px-1.5 py-0.5 rounded bg-black">
                             {ac.severity} severity
                           </span>
                         </div>
@@ -378,46 +378,46 @@ function ReportPanel({
   }
 
   return (
-    <div className="glass-card p-6 bg-[#0a0a0c] border border-white/15 shadow-elevated animate-slide-up space-y-5">
-      <div className="flex items-center justify-between pb-3 border-b border-white/10">
+    <div className="glass-card p-6 bg-white border border-black/15 shadow-xl animate-slide-up space-y-5">
+      <div className="flex items-center justify-between pb-3 border-b border-black/10">
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-white" />
-          <h2 className="text-sm font-semibold text-white tracking-tight">API Release Migration Checklist</h2>
+          <FileText className="w-4 h-4 text-black" />
+          <h2 className="text-sm font-bold text-black tracking-tight">API Release Migration Checklist</h2>
         </div>
-        <button onClick={onClose} className="text-zinc-400 hover:text-white">
+        <button onClick={onClose} className="text-zinc-500 hover:text-black">
           <X className="w-4 h-4" />
         </button>
       </div>
 
       {overview && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <div className="p-3 rounded-lg bg-zinc-950 border border-white/10">
-            <span className="text-[10px] font-mono text-zinc-400 uppercase">Breaking</span>
-            <p className="text-xl font-bold font-mono text-rose-400 mt-0.5">{overview.breaking}</p>
+          <div className="p-3 rounded-lg bg-zinc-50 border border-black/10">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase font-semibold">Breaking</span>
+            <p className="text-xl font-bold font-mono text-black mt-0.5">{overview.breaking}</p>
           </div>
-          <div className="p-3 rounded-lg bg-zinc-950 border border-white/10">
-            <span className="text-[10px] font-mono text-zinc-400 uppercase">Warnings</span>
-            <p className="text-xl font-bold font-mono text-amber-400 mt-0.5">{overview.warnings}</p>
+          <div className="p-3 rounded-lg bg-zinc-50 border border-black/10">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase font-semibold">Warnings</span>
+            <p className="text-xl font-bold font-mono text-zinc-800 mt-0.5">{overview.warnings}</p>
           </div>
-          <div className="p-3 rounded-lg bg-zinc-950 border border-white/10">
-            <span className="text-[10px] font-mono text-zinc-400 uppercase">Non-Breaking</span>
-            <p className="text-xl font-bold font-mono text-emerald-400 mt-0.5">{overview.nonBreaking}</p>
+          <div className="p-3 rounded-lg bg-zinc-50 border border-black/10">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase font-semibold">Non-Breaking</span>
+            <p className="text-xl font-bold font-mono text-zinc-600 mt-0.5">{overview.nonBreaking}</p>
           </div>
-          <div className="p-3 rounded-lg bg-zinc-950 border border-white/10">
-            <span className="text-[10px] font-mono text-zinc-400 uppercase">Affected Teams</span>
-            <p className="text-xl font-bold font-mono text-white mt-0.5">{overview.affectedConsumers}</p>
+          <div className="p-3 rounded-lg bg-zinc-50 border border-black/10">
+            <span className="text-[10px] font-mono text-zinc-500 uppercase font-semibold">Affected Teams</span>
+            <p className="text-xl font-bold font-mono text-black mt-0.5">{overview.affectedConsumers}</p>
           </div>
         </div>
       )}
 
       <div className="space-y-2">
-        <p className="text-xs font-mono uppercase text-zinc-400 tracking-wider font-semibold">
+        <p className="text-xs font-mono uppercase text-zinc-700 tracking-wider font-bold">
           Architectural Action Items & Recommendations:
         </p>
         {recs.map((r, i) => (
           <div
             key={i}
-            className="p-3 rounded-lg bg-zinc-950 border border-white/10 text-xs text-zinc-300 font-mono leading-relaxed"
+            className="p-3 rounded-lg bg-zinc-50 border border-black/10 text-xs text-zinc-800 font-mono leading-relaxed"
           >
             {r}
           </div>
@@ -425,7 +425,7 @@ function ReportPanel({
       </div>
 
       {isAdmin && (
-        <div className="flex gap-2.5 pt-3 border-t border-white/10">
+        <div className="flex gap-2.5 pt-3 border-t border-black/10">
           <button
             onClick={() => signOff('approved')}
             disabled={signOffLoading}

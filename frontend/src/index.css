@@ -2,18 +2,18 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* ── Minimalist Monochrome Palette & Tokens ── */
+/* ── Minimalist Monochrome Palette & Tokens (Awwwards White Canvas & Black Typography) ── */
 :root {
-  --bg-base: #000000;
-  --bg-panel: #09090b;
-  --bg-card: #101012;
-  --bg-card-hover: #161619;
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-default: rgba(255, 255, 255, 0.12);
-  --border-active: rgba(255, 255, 255, 0.25);
-  --text-primary: #ffffff;
-  --text-secondary: #d4d4d8;
-  --text-muted: #a1a1aa;
+  --bg-base: #ffffff;
+  --bg-panel: #fafafa;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f4f4f5;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-default: rgba(0, 0, 0, 0.14);
+  --border-active: rgba(0, 0, 0, 0.35);
+  --text-primary: #000000;
+  --text-secondary: #27272a;
+  --text-muted: #52525b;
   --text-dim: #71717a;
 }
 
@@ -26,13 +26,13 @@
 
 html {
   scroll-behavior: smooth;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #000000;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #000000;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -40,8 +40,8 @@ body {
 }
 
 ::selection {
-  background: #ffffff;
-  color: #000000;
+  background: #000000;
+  color: #ffffff;
 }
 
 /* ── Sleek Minimal Scrollbars ── */
@@ -50,57 +50,61 @@ body {
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #ffffff;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.16);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.35);
 }
 
 /* ── Architectural Card Surfaces & Bento Grid ── */
 .glass-card {
-  background: #0d0d0f;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(0, 0, 0, 0.22);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .bento-card {
   position: relative;
-  background: #09090b;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
   transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .bento-card:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: #0d0d10;
+  border-color: rgba(0, 0, 0, 0.25);
+  background: #fafafa;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 .bento-card-hero {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(9, 9, 11, 0.95) 100%), #09090b;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.14);
 }
 
 .bento-card-hero:hover {
-  border-color: rgba(255, 255, 255, 0.22);
+  border-color: rgba(0, 0, 0, 0.3);
 }
 
 .glass-panel {
-  background: #08080a;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* ── Buttons (Great UI Minimalist Tactile Pattern) ── */
+/* ── Buttons (Tactile Monochrome Pattern) ── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -129,92 +133,91 @@ body {
   pointer-events: none;
 }
 
-/* Primary Button: Pure White, Tactile Top Highlight */
+/* Primary Button: Solid Pitch Black with Crisp White Text */
 .btn-primary {
-  background: #ffffff;
-  color: #000000;
+  background: #000000;
+  color: #ffffff;
   font-weight: 600;
-  border-color: #ffffff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: #000000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #e4e4e7;
-  border-color: #e4e4e7;
+  background: #27272a;
+  border-color: #27272a;
 }
 
-/* Secondary Button: Dark Obsidian, Hairline Border */
+/* Secondary Button: Clean White with 1px Black Border */
 .btn-secondary {
-  background: #121215;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #1a1a1f;
-  border-color: rgba(255, 255, 255, 0.22);
+  background: #f4f4f5;
+  border-color: rgba(0, 0, 0, 0.35);
 }
 
 /* Ghost Button */
 .btn-ghost {
   background: transparent;
-  color: #a1a1aa;
+  color: #52525b;
   border: 1px solid transparent;
 }
 
 .btn-ghost:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.05);
+  color: #000000;
 }
 
-/* Danger Button */
+/* Danger Button - Crisp Black & White Outline */
 .btn-danger {
-  background: #18090b;
-  color: #fda4af;
-  border: 1px solid rgba(244, 63, 94, 0.3);
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.4);
 }
 
 .btn-danger:hover:not(:disabled) {
-  background: #250d11;
-  border-color: rgba(244, 63, 94, 0.5);
-  color: #fecdd3;
+  background: #000000;
+  border-color: #000000;
+  color: #ffffff;
 }
 
 /* ── Minimalist Inputs ── */
 .input {
   width: 100%;
-  background: #0a0a0c;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.16);
   border-radius: 8px;
   padding: 8px 12px;
-  color: #ffffff;
+  color: #000000;
   font-size: 0.8125rem;
   outline: none;
   transition: border-color 0.12s ease, box-shadow 0.12s ease;
 }
 
 .input::placeholder {
-  color: #52525b;
+  color: #a1a1aa;
 }
 
 .input:focus {
-  border-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+  border-color: #000000;
+  box-shadow: 0 0 0 1px #000000;
 }
 
-/* ── High-Contrast Status Badges (Crisp & Restrained) ── */
+/* ── Pure Black & White Status Badges ── */
 .badge-breaking {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: #160809;
-  color: #fda4af;
-  border: 1px solid rgba(244, 63, 94, 0.35);
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 700;
   padding: 2px 8px;
   border-radius: 6px;
   letter-spacing: 0.02em;
@@ -224,9 +227,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: #161105;
-  color: #fde68a;
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: #f4f4f5;
+  color: #18181b;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.6875rem;
   font-weight: 600;
@@ -239,18 +242,18 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: #08160e;
-  color: #a7f3d0;
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.3);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 700;
   padding: 2px 8px;
   border-radius: 6px;
   letter-spacing: 0.02em;
 }
 
-/* ── HTTP Method Badges ── */
+/* ── Architectural Black & White HTTP Method Badges ── */
 .badge-method {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.6875rem;
@@ -263,42 +266,44 @@ body {
 }
 
 .badge-method-get {
-  background: rgba(56, 189, 248, 0.1);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  background: #f4f4f5;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .badge-method-post {
-  background: rgba(52, 211, 153, 0.1);
-  color: #34d399;
-  border: 1px solid rgba(52, 211, 153, 0.25);
+  background: #000000;
+  color: #ffffff;
+  font-weight: 800;
+  border: 1px solid #000000;
 }
 
 .badge-method-put {
-  background: rgba(251, 191, 36, 0.1);
-  color: #fbbf24;
-  border: 1px solid rgba(251, 191, 36, 0.25);
+  background: #e4e4e7;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .badge-method-patch {
-  background: rgba(251, 146, 60, 0.1);
-  color: #fb923c;
-  border: 1px solid rgba(251, 146, 60, 0.25);
+  background: #f4f4f5;
+  color: #52525b;
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .badge-method-delete {
-  background: rgba(248, 113, 113, 0.1);
-  color: #f87171;
-  border: 1px solid rgba(248, 113, 113, 0.25);
+  background: #000000;
+  color: #ffffff;
+  font-weight: 800;
+  border: 1px solid #000000;
 }
 
 /* ── Monospace Code Inset ── */
 .code-inline {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
-  background: #141417;
-  color: #f4f4f5;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #f4f4f5;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -307,17 +312,17 @@ body {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
   line-height: 1.5;
-  background: #08080a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   padding: 12px 14px;
-  color: #e4e4e7;
+  color: #18181b;
   overflow-x: auto;
 }
 
 /* ── Subtle Loading Skeleton ── */
 .skeleton {
-  background: linear-gradient(90deg, #101013 25%, #18181c 50%, #101013 75%);
+  background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 50%, #f4f4f5 75%);
   background-size: 200% 100%;
   animation: shimmer 1.8s infinite;
   border-radius: 6px;
@@ -328,10 +333,454 @@ body {
   100% { background-position: 200% 0; }
 }
 
-/* ── Hairline Grid Background (Subtle Texture, No Loud AI Blurs) ── */
+/* ── Hairline Grid Background (Subtle Texture) ── */
 .bg-grid-subtle {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+/* ── Unslop High-Craft Design System Tokens & WCAG 2.2 AA Utilities ── */
+:root {
+  --color-surface-base: #ffffff;
+  --color-surface-subtle: #fafafa;
+  --color-surface-card: #ffffff;
+  --color-surface-card-hover: #f4f4f5;
+  --color-accent: #000000;
+  --color-border-subtle: rgba(0, 0, 0, 0.08);
+  --color-border-default: rgba(0, 0, 0, 0.15);
+  --color-border-focus: #000000;
+  --color-text-primary: #000000;
+  --color-text-secondary: #52525b;
+  --color-text-tertiary: #71717a;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+/* Accessible focus ring (WCAG 2.2 AA) - High contrast monochrome */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #000000 !important;
+  outline-offset: 2px !important;
+}
+
+/* Unslop Black & White Primary Button - Solid Pitch Black with White Text */
+.btn-vyro-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  color: #ffffff;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid #000000;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  transition: background-color 120ms ease, border-color 120ms ease, transform 80ms ease;
+}
+
+.btn-vyro-primary:hover {
+  background-color: #27272a;
+  border-color: #27272a;
+}
+
+.btn-vyro-primary:active {
+  transform: translateY(1px);
+  background-color: #18181b;
+}
+
+.btn-vyro-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Unslop Black & White Secondary Button - Pure White with Crisp Black Border */
+.btn-vyro-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.22);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.btn-vyro-secondary:hover {
+  background-color: #f4f4f5;
+  border-color: rgba(0, 0, 0, 0.4);
+  color: #000000;
+}
+
+.btn-vyro-secondary:active {
+  background-color: #e4e4e7;
+}
+
+/* Unslop Content Card - Pure architectural monochrome surface */
+.vyro-card {
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.vyro-card:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  background-color: #fafafa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Keycap shortcut styling */
+.kbd-keycap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  line-height: 1;
+  color: #18181b;
+  background-color: #f4f4f5;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* Infinite Horizontal Marquee Ticker */
+@keyframes tickerLoop {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  display: flex;
+  width: max-content;
+  animation: tickerLoop 30s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* Scroll progress indicator at top - Solid Pitch Black Hairline */
+.scroll-progress-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background-color: #000000;
+  z-index: 9999;
+  transition: width 60ms linear;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Vyro Scroll-Reveal Layout System
+   Dark outer shell → sticky dark footer underneath → white sheet slides up.
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Outer shell: dark near-black canvas */
+.vyro-shell {
+  background-color: #09090b;
+  min-height: 100vh;
+  position: relative;
+}
+
+/*
+ * White content sheet.
+ * z-index: 2 so it sits on top of the sticky footer (z-index: 1).
+ * Rounded bottom corners reveal the dark footer as you scroll down.
+ */
+.page-sheet {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  border-bottom-left-radius: 32px;
+  border-bottom-right-radius: 32px;
+  overflow: hidden; /* clip the bottom-radius cleanly */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Vyro Sticky Footer
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Footer is sticky at the bottom of the viewport, below the sheet */
+.vyro-sticky-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  background-color: #09090b;
+  color: #e4e4e7;
+  font-size: 0.8125rem; /* 13px */
+  line-height: 1.5;
+}
+
+/* On mobile: tall footers must not be clipped — switch to static */
+@media (max-width: 768px) {
+  .vyro-sticky-footer {
+    position: static;
+  }
+}
+
+/* Inner content wrapper */
+.vyro-footer-inner {
+  max-width: 72rem; /* 1152px — wide */
+  margin: 0 auto;
+  padding: 3rem 1.5rem 1.5rem;
+}
+
+/* ── Top grid: 1.4fr brand + 2fr (3-col nav) ── */
+.vyro-footer-top {
+  display: grid;
+  grid-template-columns: 1.4fr 2fr;
+  gap: 3rem;
+  padding-bottom: 2.5rem;
+}
+@media (max-width: 768px) {
+  .vyro-footer-top {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* Brand column */
+.vyro-footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Bold uppercase wordmark — white */
+.vyro-footer-wordmark {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  font-family: inherit;
+  line-height: 1;
+}
+
+/* Tagline — muted zinc */
+.vyro-footer-tagline {
+  color: #a1a1aa;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  max-width: 24rem;
+}
+
+/* Social icon strip */
+.vyro-footer-socials {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.vyro-footer-social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  background-color: #111114;
+  border: 1px solid #27272a;
+  color: #a1a1aa;
+  transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease;
+  flex-shrink: 0;
+}
+.vyro-footer-social-btn:hover {
+  color: #ffffff;
+  background-color: #18181b;
+  border-color: #3f3f46;
+}
+.vyro-footer-social-btn:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+
+/* Status pill */
+.vyro-footer-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 9999px;
+  background-color: #111114;
+  border: 1px solid #27272a;
+  font-size: 0.75rem;
+  color: #e4e4e7;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.vyro-footer-status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #22c55e;
+  flex-shrink: 0;
+  /* subtle pulse */
+  animation: statusPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+/* ── Nav: 3-column grid ── */
+.vyro-footer-nav {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+@media (max-width: 480px) {
+  .vyro-footer-nav {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+/* Column headings — muted zinc */
+.vyro-footer-nav-heading {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #71717a;
+  margin-bottom: 0.875rem;
+  line-height: 1;
+}
+
+.vyro-footer-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+/* Nav links — light zinc, white on hover */
+.vyro-footer-nav-link {
+  color: #e4e4e7;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-block;
+  transition: color 120ms ease;
+  font-family: inherit;
+  text-align: left;
+}
+.vyro-footer-nav-link:hover {
+  color: #ffffff;
+}
+.vyro-footer-nav-link:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ── Divider ── */
+.vyro-footer-divider {
+  height: 1px;
+  background-color: #18181b;
+  margin: 0;
+}
+
+/* ── Bottom bar ── */
+.vyro-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.vyro-footer-copy {
+  color: #71717a;
+  font-size: 0.75rem;
+}
+
+/* AI row */
+.vyro-footer-ai-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.vyro-footer-ai-label {
+  color: #71717a;
+  font-size: 0.75rem;
+  margin-right: 0.25rem;
+  white-space: nowrap;
+}
+
+.vyro-footer-ai-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 6px;
+  background-color: #111114;
+  border: 1px solid #27272a;
+  color: #71717a;
+  cursor: pointer;
+  transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease;
+  flex-shrink: 0;
+}
+.vyro-footer-ai-btn:hover {
+  color: #ffffff;
+  background-color: #18181b;
+  border-color: #3f3f46;
+}
+.vyro-footer-ai-btn:focus-visible {
+  outline: 2px solid #0ea5e9;
+  outline-offset: 2px;
+}
+
+/* Cookie toast */
+.vyro-footer-cookie-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0ea5e9;
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.35);
+  z-index: 9000;
+  pointer-events: none;
+  animation: toastIn 200ms ease forwards;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
