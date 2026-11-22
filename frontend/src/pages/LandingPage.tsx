@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore, authActions } from '../store/auth.store';
 import { authApi } from '../lib/api';
 import toast from 'react-hot-toast';
 import { PageShell } from '../components/PageShell';
+import { TextReveal, HeroBeams, SpecDiff, TerminalLog } from '../components/animations';
+const PipelineStepper = lazy(() => import('../components/animations/PipelineStepper').then(m => ({ default: m.PipelineStepper })));
+const BlastRadar = lazy(() => import('../components/animations/BlastRadar').then(m => ({ default: m.BlastRadar })));
 import {
   Terminal,
   Shield,
@@ -148,7 +151,6 @@ export function LandingPage() {
 
   const [activeScenario, setActiveScenario] = useState<Scenario>(DEMO_SCENARIOS[0]);
   const [isRunningMock, setIsRunningMock] = useState(false);
-  const [showLogs, setShowLogs] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<'admin' | 'mobile' | 'analytics'>('admin');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -192,13 +194,13 @@ export function LandingPage() {
     }
   }
 
+  const handleMockComplete = useCallback(() => {
+    setIsRunningMock(false);
+    toast.success('Contract test run completed');
+  }, []);
+
   function handleTriggerSimulation() {
     setIsRunningMock(true);
-    setShowLogs(true);
-    setTimeout(() => {
-      setIsRunningMock(false);
-      toast.success('Contract test run completed');
-    }, 1500);
   }
 
   return (
@@ -278,12 +280,14 @@ export function LandingPage() {
       </header>
 
       {/* ── Hero Section (Awwwards Bold Black & White Minimalist) ── */}
-      <section id="overview" className="pt-20 pb-20 border-b border-black/10 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section id="overview" className="pt-20 pb-20 border-b border-black/10 bg-white relative">
+        <HeroBeams />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           {/* Headline: Crisp, solid, authoritative pure black */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-black max-w-4xl mx-auto leading-tight">
-            Detect breaking API changes before they reach downstream consumers.
-          </h1>
+          <TextReveal
+            text="Detect breaking API changes before they reach downstream consumers."
+            className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-black max-w-4xl mx-auto leading-tight"
+          />
 
           {/* Subtitle */}
           <p className="mt-5 text-base sm:text-lg text-zinc-600 max-w-2xl mx-auto leading-relaxed">
@@ -385,7 +389,6 @@ export function LandingPage() {
                   type="button"
                   onClick={() => {
                     setActiveScenario(scenario);
-                    setShowLogs(false);
                   }}
                   className={`p-3 rounded-lg text-left border transition-all ${
                     isSelected
@@ -432,27 +435,11 @@ export function LandingPage() {
                   <span className="text-[11px] text-zinc-500 font-mono">AST comparison</span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <div className="text-[11px] font-mono text-zinc-600 mb-1 flex items-center gap-1.5 font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
-                      v1.0.0 (Production)
-                    </div>
-                    <pre className="p-2.5 rounded bg-zinc-50 border border-black/10 text-[11px] font-mono text-zinc-800 overflow-x-auto h-40">
-                      {activeScenario.oldSnippet}
-                    </pre>
-                  </div>
-
-                  <div>
-                    <div className="text-[11px] font-mono text-black mb-1 flex items-center gap-1.5 font-semibold">
-                      <span className="w-1.5 h-1.5 rounded-full bg-black" />
-                      v2.0.0 (Proposed PR)
-                    </div>
-                    <pre className="p-2.5 rounded bg-zinc-50 border border-black/20 text-[11px] font-mono text-black overflow-x-auto h-40 font-semibold">
-                      {activeScenario.newSnippet}
-                    </pre>
-                  </div>
-                </div>
+                <SpecDiff
+                  oldSnippet={activeScenario.oldSnippet}
+                  newSnippet={activeScenario.newSnippet}
+                  scenarioId={activeScenario.id}
+                />
 
                 <div className="mt-3 p-2.5 rounded bg-zinc-50 border border-black/10">
                   <p className="text-xs text-zinc-700 leading-normal">
@@ -500,65 +487,45 @@ export function LandingPage() {
                   </span>
                 </div>
 
-                <div className="space-y-2">
-                  {activeScenario.impactedTeams.map((team) => (
-                    <div
-                      key={team.name}
-                      className="p-2.5 rounded bg-zinc-50 border border-black/10 flex items-start justify-between gap-2"
-                    >
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-semibold text-black">{team.name}</span>
-                          <span
-                            className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${
-                              team.blocked
-                                ? 'bg-black text-white'
-                                : 'bg-zinc-200 text-zinc-800 border border-zinc-300'
-                            }`}
-                          >
-                            {team.blocked ? 'Blocked' : 'Compatible'}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-zinc-600 mt-0.5">{team.impact}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Terminal log (High-contrast dark terminal inset against white page) */}
-              <div className="vyro-card p-3 bg-[#0c0c0e] border-black/20 text-zinc-200 shadow-md">
-                <div className="flex items-center justify-between pb-1.5 border-b border-zinc-800 mb-2 text-[10px] font-mono text-zinc-400">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-zinc-600" />
-                    <span className="font-semibold text-zinc-300">prism-runner.log</span>
-                  </div>
-                  <span>Port :dynamic</span>
-                </div>
-
-                <div className="font-mono text-[11px] space-y-0.5 h-32 overflow-y-auto">
-                  {showLogs ? (
-                    activeScenario.mockLogs.map((log, idx) => (
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <div className="space-y-2 flex-1">
+                    {activeScenario.impactedTeams.map((team) => (
                       <div
-                        key={idx}
-                        className={
-                          log.includes('BLOCKED') || log.includes('✗')
-                            ? 'text-white font-medium bg-zinc-800 px-1 rounded'
-                            : log.includes('APPROVED') || log.includes('✓')
-                            ? 'text-zinc-100 font-medium'
-                            : 'text-zinc-400'
-                        }
+                        key={team.name}
+                        className="p-2.5 rounded bg-zinc-50 border border-black/10 flex items-start justify-between gap-2"
                       >
-                        {log}
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-semibold text-black">{team.name}</span>
+                            <span
+                              className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${
+                                team.blocked
+                                  ? 'bg-black text-white'
+                                  : 'bg-zinc-200 text-zinc-800 border border-zinc-300'
+                              }`}
+                            >
+                              {team.blocked ? 'Blocked' : 'Compatible'}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-zinc-600 mt-0.5">{team.impact}</p>
+                        </div>
                       </div>
-                    ))
-                  ) : (
-                    <div className="h-full flex items-center justify-center text-zinc-500 text-xs">
-                      Run mock validation to inspect Newman logs
-                    </div>
-                  )}
+                    ))}
+                  </div>
+                  <Suspense fallback={null}>
+                    <BlastRadar teams={activeScenario.impactedTeams} />
+                  </Suspense>
                 </div>
               </div>
+
+              {/* Terminal log (animated typewriter) */}
+              <TerminalLog
+                key={activeScenario.id}
+                logs={activeScenario.mockLogs}
+                severity={activeScenario.severity}
+                isRunning={isRunningMock}
+                onComplete={handleMockComplete}
+              />
             </div>
           </div>
         </div>
@@ -576,6 +543,10 @@ export function LandingPage() {
               Five components work together to evaluate spec changes, trace dependency reach, and enforce contract gates.
             </p>
           </div>
+
+          <Suspense fallback={null}>
+            <PipelineStepper />
+          </Suspense>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Card 1 */}

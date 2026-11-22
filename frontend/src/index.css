@@ -784,3 +784,28 @@ textarea:focus-visible {
   from { opacity: 0; transform: translateX(-50%) translateY(8px); }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Reduced Motion Fallbacks (WCAG 2.2 / prefers-reduced-motion)
+───────────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  /* Stop the marquee ticker */
+  .animate-ticker {
+    animation: none !important;
+  }
+
+  /* Disable scroll progress bar transition */
+  .scroll-progress-line {
+    transition: none !important;
+  }
+
+  /* Kill all generic CSS animations and transitions */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
