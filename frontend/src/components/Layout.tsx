@@ -2,8 +2,9 @@ import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
 import { useAuthStore, authActions } from '../store/auth.store';
 import {
   LayoutDashboard, FileCode, GitCompare, Users, FileText,
-  ClipboardList, LogOut, Terminal, Shield, Globe
+  ClipboardList, LogOut, Shield, Globe
 } from 'lucide-react';
+import { BrandLogo } from './BrandLogo';
 
 const navItems = [
   { to: '/app', icon: LayoutDashboard, label: 'Dashboard', exact: true },
@@ -31,11 +32,11 @@ export function Layout() {
         <div className="h-16 px-5 flex items-center border-b border-black/10">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-black flex items-center justify-center text-white font-bold shadow-subtle flex-shrink-0">
-              <Terminal className="w-4 h-4 text-white stroke-[2.5]" />
+              <BrandLogo className="w-4 h-4 text-white" />
             </div>
             <div className="leading-tight">
               <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-xs text-black tracking-tight uppercase">API Impact</span>
+                <span className="font-semibold text-xs text-black tracking-tight uppercase">N Differ</span>
                 <span className="font-mono text-[9px] px-1 py-0.2 bg-zinc-100 text-zinc-800 rounded border border-zinc-300 font-semibold">SIM</span>
               </div>
               <p className="text-[11px] text-zinc-500 font-mono">v1.0.0-prod</p>

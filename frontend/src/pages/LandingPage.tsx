@@ -4,13 +4,13 @@ import { useAuthStore, authActions } from '../store/auth.store';
 import { authApi } from '../lib/api';
 import toast from 'react-hot-toast';
 import { PageShell } from '../components/PageShell';
+import { BrandLogo } from '../components/BrandLogo';
 import { TextReveal, SpecDiff, TerminalLog } from '../components/animations';
 const PipelineStepper = lazy(() => import('../components/animations/PipelineStepper').then(m => ({ default: m.PipelineStepper })));
 const BlastRadar = lazy(() => import('../components/animations/BlastRadar').then(m => ({ default: m.BlastRadar })));
 const InkOrbitFeatures = lazy(() => import('../components/ui/ink-orbit-features'));
 import { BackgroundPaths } from '../components/ui/background-paths';
 import {
-  Terminal,
   Shield,
   GitCompare,
   Users,
@@ -247,41 +247,29 @@ export function LandingPage() {
       />
 
       {/* ── Main Navigation ── */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/10">
+      <header className="sticky top-0 z-50 bg-[#09090b]/85 backdrop-blur-md border-b border-white/10 text-white">
         <nav aria-label="Main navigation" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md bg-black text-white flex items-center justify-center font-bold flex-shrink-0">
-              <Terminal className="w-4 h-4 stroke-[2.2]" />
+          <a href="#overview" className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-md bg-white text-black flex items-center justify-center font-bold flex-shrink-0">
+              <BrandLogo className="w-4 h-4" />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-sm tracking-tight text-black uppercase font-mono">API IMPACT</span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-800 border border-zinc-300 font-semibold">
-                SIMULATOR
-              </span>
-            </div>
-          </div>
-
-          {/* Nav Links */}
-          <div className="hidden md:flex items-center gap-6 text-xs text-zinc-600 font-medium">
-            <a href="#overview" className="hover:text-black transition-colors">Overview</a>
-            <a href="#demo" className="hover:text-black transition-colors">Sandbox</a>
-            <a href="#architecture" className="hover:text-black transition-colors">Architecture</a>
-            <a href="#flow" className="hover:text-black transition-colors">Contract Flow</a>
-            <a href="#personas" className="hover:text-black transition-colors">Roles</a>
-          </div>
+            <span className="font-bold text-sm tracking-tight text-white uppercase font-mono">
+              N Differ
+            </span>
+          </a>
 
           {/* Actions */}
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
               <div className="flex items-center gap-3">
-                <span className="hidden sm:inline-block text-xs text-zinc-600 font-mono">
+                <span className="hidden sm:inline-block text-xs text-zinc-400 font-mono">
                   {currentUser?.email}
                 </span>
                 <button
                   type="button"
                   onClick={() => navigate('/app')}
-                  className="btn-vyro-primary text-xs py-1.5 px-3.5"
+                  className="inline-flex items-center rounded-lg bg-white text-black hover:bg-zinc-200 transition-colors text-xs font-semibold py-1.5 px-3.5"
                 >
                   <span>Open console</span>
                   <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
@@ -292,14 +280,14 @@ export function LandingPage() {
                 <button
                   type="button"
                   onClick={() => navigate('/login')}
-                  className="text-xs text-zinc-600 hover:text-black px-2.5 py-1.5 rounded transition-colors font-medium"
+                  className="text-xs text-zinc-300 hover:text-white px-2.5 py-1.5 rounded transition-colors font-medium"
                 >
                   Sign in
                 </button>
                 <button
                   type="button"
                   onClick={() => handleOneClickLogin('admin')}
-                  className="btn-vyro-primary text-xs py-1.5 px-3.5"
+                  className="inline-flex items-center rounded-lg bg-white text-black hover:bg-zinc-200 transition-colors text-xs font-semibold py-1.5 px-3.5"
                 >
                   <span>Launch demo</span>
                   <ArrowRight className="w-3.5 h-3.5 ml-1.5" />

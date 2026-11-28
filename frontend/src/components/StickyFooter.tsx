@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 // ── Brand ────────────────────────────────────────────────────────────────────
 const BRAND = {
-  name: 'API IMPACT',
+  name: 'N DIFFER',
   tagline: 'Detect breaking API changes before they reach consumers.',
   version: 'v1.0.0-prod',
 };

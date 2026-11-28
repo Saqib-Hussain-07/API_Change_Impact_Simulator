@@ -12,12 +12,12 @@ import {
   Eye,
   EyeOff,
   Loader2,
-  Terminal,
 } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/BrandLogo";
 
 export type DemoPersona = "admin" | "mobile" | "analytics";
 
@@ -169,10 +169,10 @@ const Login03 = ({
           className="relative z-10 flex items-center gap-2.5"
         >
           <div className="flex size-6 items-center justify-center rounded bg-white text-black">
-            <Terminal className="size-3.5 stroke-[2.5]" />
+            <BrandLogo className="size-3.5" />
           </div>
           <span className="text-base font-semibold tracking-[-0.025em] text-white">
-            API Impact
+            N Differ
           </span>
         </motion.div>
 
@@ -190,7 +190,7 @@ const Login03 = ({
             <span aria-hidden="true" className="text-zinc-700">
               |
             </span>
-            <span>API Impact</span>
+            <span>N Differ</span>
           </figcaption>
         </motion.figure>
       </aside>
@@ -240,10 +240,10 @@ const Login03 = ({
             className="flex items-center gap-2 lg:hidden"
           >
             <div className="flex size-6 items-center justify-center rounded bg-white text-black">
-              <Terminal className="size-3.5 stroke-[2.5]" />
+              <BrandLogo className="size-3.5" />
             </div>
             <span className="text-base font-semibold tracking-[-0.025em] text-white">
-              API Impact
+              N Differ
             </span>
           </motion.div>
 
@@ -389,7 +389,7 @@ const Login03 = ({
             {...enterMotion(4, reduceMotion)}
             className="text-xs text-zinc-500"
           >
-            {mode === "signin" ? "New to API Impact? " : "Already have access? "}
+            {mode === "signin" ? "New to N Differ? " : "Already have access? "}
             <button
               type="button"
               onClick={() =>
