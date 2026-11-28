@@ -22,7 +22,8 @@ export default function App() {
       {/* Public Landing & Auth */}
       <Route path="/" element={<LandingPageWrapped />} />
       <Route path="/landing" element={<LandingPageWrapped />} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage key="signin" />} />
+      <Route path="/signup" element={<LoginPage key="signup" defaultMode="signup" />} />
 
       {/* Authenticated Workspace */}
       <Route

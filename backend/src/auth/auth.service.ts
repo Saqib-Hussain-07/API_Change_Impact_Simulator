@@ -17,13 +17,14 @@ export interface LoginResult {
 }
 
 export async function loginUser(email: string, password: string): Promise<LoginResult> {
+  const normalizedEmail = email.trim().toLowerCase();
   const { rows } = await query<{
     id: string;
     email: string;
     role: UserRole;
     password_hash: string;
     team_id: string | null;
-  }>('SELECT id, email, role, password_hash, team_id FROM users WHERE email = $1', [email]);
+  }>('SELECT id, email, role, password_hash, team_id FROM users WHERE LOWER(email) = $1', [normalizedEmail]);
 
   const user = rows[0];
   if (!user) throw createError('Invalid credentials', 401, 'INVALID_CREDENTIALS');

@@ -15,6 +15,25 @@
   --text-secondary: #27272a;
   --text-muted: #52525b;
   --text-dim: #71717a;
+
+  /* shadcn/ui monochrome tokens */
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card: #fafafa;
+  --card-foreground: #09090b;
+  --primary: #09090b;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #09090b;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #09090b;
 }
 
 /* ── Base ── */
@@ -26,6 +45,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
   color-scheme: light;
 }
 

@@ -44,10 +44,13 @@ async function getPgliteInstance() {
     const dataDir = process.env.PGLITE_DATA_DIR || defaultDir;
     try {
       fs.mkdirSync(dataDir, { recursive: true });
-      pgliteInstance = new PGlite(dataDir);
+      const candidate = new PGlite(dataDir);
+      await candidate.query('SELECT 1');
+      pgliteInstance = candidate;
     } catch (dirErr) {
-      logger.warn({ err: dirErr }, 'Could not create PGlite directory, falling back to in-memory database');
+      logger.warn({ err: dirErr }, 'Disk PGlite failed to initialize, falling back to in-memory database');
       pgliteInstance = new PGlite();
+      await pgliteInstance.query('SELECT 1');
     }
   }
   return pgliteInstance;

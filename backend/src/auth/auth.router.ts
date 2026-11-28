@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { loginUser, refreshUserToken, registerUser } from './auth.service';
-import { authenticate, authorize } from './auth.middleware';
+import type { UserRole } from './jwt';
 
 export const authRouter = Router();
+const VALID_ROLES: UserRole[] = ['admin', 'consumer_rep', 'reviewer'];
 
 /**
  * POST /api/v1/auth/login
@@ -40,16 +41,21 @@ authRouter.post('/refresh', async (req, res, next) => {
 
 /**
  * POST /api/v1/auth/register
- * Admin-only: requires a valid admin JWT.
- * Body: { email, password, role, teamId? }
+ * Body: { email, password, role?, teamId? }
  */
-authRouter.post('/register', authenticate, authorize('admin'), async (req, res, next) => {
+authRouter.post('/register', async (req, res, next) => {
   try {
-    const { email, password, role, teamId } = req.body;
-    if (!email || !password || !role) {
-      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'email, password, role required', details: null } });
+    const { email, password, role = 'consumer_rep', teamId } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'email and password required', details: null } });
     }
-    const user = await registerUser(email, password, role, teamId);
+    if (String(password).length < 6) {
+      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'password must be at least 6 characters', details: null } });
+    }
+    if (!VALID_ROLES.includes(role)) {
+      return res.status(400).json({ error: { code: 'VALIDATION_ERROR', message: 'Invalid role', details: null } });
+    }
+    const user = await registerUser(String(email).trim().toLowerCase(), password, role, teamId);
     res.status(201).json({ user });
   } catch (err) {
     next(err);

@@ -4,25 +4,26 @@ import { useAuthStore, authActions } from '../store/auth.store';
 import { authApi } from '../lib/api';
 import toast from 'react-hot-toast';
 import { PageShell } from '../components/PageShell';
-import { TextReveal, HeroBeams, SpecDiff, TerminalLog } from '../components/animations';
+import { TextReveal, SpecDiff, TerminalLog } from '../components/animations';
 const PipelineStepper = lazy(() => import('../components/animations/PipelineStepper').then(m => ({ default: m.PipelineStepper })));
 const BlastRadar = lazy(() => import('../components/animations/BlastRadar').then(m => ({ default: m.BlastRadar })));
+const InkOrbitFeatures = lazy(() => import('../components/ui/ink-orbit-features'));
+import { BackgroundPaths } from '../components/ui/background-paths';
 import {
   Terminal,
   Shield,
-  ShieldCheck,
   GitCompare,
   Users,
   CheckCircle2,
   ArrowRight,
   Play,
   RefreshCw,
-  Zap,
   Lock,
   Cpu,
   Server,
   Code2,
   ArrowUp,
+  ChevronDown,
 } from 'lucide-react';
 
 interface Scenario {
@@ -144,6 +145,14 @@ const MARQUEE_ITEMS = [
   'WCAG 2.2 AA ACCESSIBLE',
 ];
 
+const SECTIONS = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'demo', label: 'Sandbox' },
+  { id: 'architecture', label: 'Architecture' },
+  { id: 'flow', label: 'Contract Flow' },
+  { id: 'personas', label: 'Roles' },
+] as const;
+
 export function LandingPage() {
   const navigate = useNavigate();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -154,6 +163,7 @@ export function LandingPage() {
   const [selectedPersona, setSelectedPersona] = useState<'admin' | 'mobile' | 'analytics'>('admin');
   const [scrollProgress, setScrollProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('overview');
 
   useEffect(() => {
     function handleScroll() {
@@ -167,6 +177,26 @@ export function LandingPage() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (typeof IntersectionObserver !== 'function') return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      { threshold: 0.35 },
+    );
+
+    for (const s of SECTIONS) {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    }
+    return () => observer.disconnect();
   }, []);
 
   function scrollToTop() {
@@ -237,6 +267,7 @@ export function LandingPage() {
             <a href="#overview" className="hover:text-black transition-colors">Overview</a>
             <a href="#demo" className="hover:text-black transition-colors">Sandbox</a>
             <a href="#architecture" className="hover:text-black transition-colors">Architecture</a>
+            <a href="#flow" className="hover:text-black transition-colors">Contract Flow</a>
             <a href="#personas" className="hover:text-black transition-colors">Roles</a>
           </div>
 
@@ -279,96 +310,83 @@ export function LandingPage() {
         </nav>
       </header>
 
-      {/* ── Hero Section (Awwwards Bold Black & White Minimalist) ── */}
-      <section id="overview" className="pt-20 pb-20 border-b border-black/10 bg-white relative">
-        <HeroBeams />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          {/* Headline: Crisp, solid, authoritative pure black */}
-          <TextReveal
-            text="Detect breaking API changes before they reach downstream consumers."
-            className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-black max-w-4xl mx-auto leading-tight"
-          />
+      {/* ── Hero Section (Full-Screen Dark BackgroundPaths) ── */}
+      <BackgroundPaths theme="dark">
+        <section
+          id="overview"
+          className="min-h-[calc(100svh-3.5rem)] scroll-mt-14 snap-start flex flex-col justify-between py-10 border-b border-white/10 relative"
+        >
+          <div className="hidden sm:block h-6" aria-hidden="true" />
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 my-auto">
+            {/* Headline: Crisp white gradient */}
+            <TextReveal
+              text="Detect breaking API changes before they reach downstream consumers."
+              className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white max-w-4xl mx-auto leading-tight"
+            />
 
-          {/* Subtitle */}
-          <p className="mt-5 text-base sm:text-lg text-zinc-600 max-w-2xl mx-auto leading-relaxed">
-            Diff OpenAPI specs, trace consumer blast radius, and test contract compatibility before merge.
-          </p>
+            {/* Subtitle */}
+            <p className="mt-5 text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+              Diff OpenAPI specs, trace consumer blast radius, and test contract compatibility before merge.
+            </p>
 
-          {/* Primary actions */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              type="button"
-              onClick={() => handleOneClickLogin('admin')}
-              className="btn-vyro-primary w-full sm:w-auto"
-            >
-              <span>Launch console as Admin</span>
-              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-            </button>
+            {/* Primary actions */}
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+              <div className="inline-block group relative bg-gradient-to-b from-white/20 to-white/5 p-px rounded-2xl backdrop-blur-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={() => handleOneClickLogin('admin')}
+                  className="w-full sm:w-auto inline-flex items-center justify-center rounded-[1.15rem] px-7 py-3.5 text-sm font-semibold backdrop-blur-md bg-[#09090b]/95 hover:bg-zinc-900 text-white transition-all duration-300 group-hover:-translate-y-0.5 border border-white/10"
+                >
+                  <span className="opacity-95 group-hover:opacity-100 transition-opacity">
+                    Launch console as Admin
+                  </span>
+                  <span className="ml-2.5 opacity-75 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300">
+                    →
+                  </span>
+                </button>
+              </div>
 
+              <a
+                href="#demo"
+                className="w-full sm:w-auto inline-flex items-center justify-center rounded-[1.15rem] px-7 py-3.5 text-sm font-medium border border-white/15 text-zinc-300 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <span>View interactive sandbox</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Scroll Hover Cue */}
+          <div className="relative z-10 flex justify-center pt-8">
             <a
               href="#demo"
-              className="btn-vyro-secondary w-full sm:w-auto"
+              aria-label="Scroll to interactive sandbox"
+              className="group inline-flex flex-col items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.03] px-4 py-2 text-[11px] font-mono uppercase tracking-widest text-zinc-400 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10 hover:text-white"
             >
-              <span>View interactive sandbox</span>
+              <span>Scroll</span>
+              <ChevronDown className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-y-1 motion-safe:animate-bounce" />
             </a>
           </div>
-
-          {/* Factual telemetry metrics (4 cols) */}
-          <div className="mt-14 grid grid-cols-2 md:grid-cols-4 gap-3 text-left">
-            <div className="vyro-card p-4">
-              <div className="text-lg font-bold text-black font-mono flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-black stroke-[2.2]" />
-                <span className="tabular-nums">AST Differ</span>
-              </div>
-              <p className="text-xs text-zinc-800 mt-1 font-semibold">Full schema parsing</p>
-              <p className="text-[11px] text-zinc-500 mt-0.5">Evaluates body, path, query, and headers</p>
-            </div>
-
-            <div className="vyro-card p-4">
-              <div className="text-lg font-bold text-black font-mono flex items-center gap-1.5">
-                <Zap className="w-4 h-4 text-black stroke-[2.2]" />
-                <span className="tabular-nums">Dynamic Ports</span>
-              </div>
-              <p className="text-xs text-zinc-800 mt-1 font-semibold">Ephemeral Prism mocks</p>
-              <p className="text-[11px] text-zinc-500 mt-0.5">Zero port collision during concurrent CI jobs</p>
-            </div>
-
-            <div className="vyro-card p-4">
-              <div className="text-lg font-bold text-black font-mono flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-black stroke-[2.2]" />
-                <span className="tabular-nums">Field Level</span>
-              </div>
-              <p className="text-xs text-zinc-800 mt-1 font-semibold">Consumer blast radius</p>
-              <p className="text-[11px] text-zinc-500 mt-0.5">Alerts only teams using changed fields</p>
-            </div>
-
-            <div className="vyro-card p-4">
-              <div className="text-lg font-bold text-black font-mono flex items-center gap-1.5">
-                <Lock className="w-4 h-4 text-black stroke-[2.2]" />
-                <span className="tabular-nums">SHA-256</span>
-              </div>
-              <p className="text-xs text-zinc-800 mt-1 font-semibold">Cryptographic audit log</p>
-              <p className="text-[11px] text-zinc-500 mt-0.5">Immutable records with PDF compliance export</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Continuous Horizontal Marquee Ticker ── */}
-      <div className="bg-[#f8f8fa] border-b border-black/10 py-3 overflow-hidden select-none">
-        <div className="animate-ticker text-xs font-mono tracking-wider uppercase text-zinc-600">
-          {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, index) => (
-            <div key={index} className="flex items-center gap-6 px-4">
-              <span className="text-black">•</span>
-              <span className="hover:text-black transition-colors font-semibold">{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+        </section>
+      </BackgroundPaths>
 
       {/* ── Interactive Sandbox Section ── */}
-      <section id="demo" className="py-16 bg-[#fafafa] border-b border-black/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section
+        id="demo"
+        className="min-h-[calc(100svh-3.5rem)] scroll-mt-14 snap-start flex flex-col bg-[#fafafa] border-b border-black/10"
+      >
+        {/* Continuous Horizontal Marquee Ticker */}
+        <div className="bg-[#f8f8fa] border-b border-black/10 py-3 overflow-hidden select-none">
+          <div className="animate-ticker text-xs font-mono tracking-wider uppercase text-zinc-600">
+            {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, index) => (
+              <div key={index} className="flex items-center gap-6 px-4">
+                <span className="text-black">•</span>
+                <span className="hover:text-black transition-colors font-semibold">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12 my-auto">
           <div className="mb-8">
             <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold">+ [01] Interactive demo</span>
             <h2 className="text-2xl font-bold text-black tracking-tight mt-1">
@@ -390,26 +408,24 @@ export function LandingPage() {
                   onClick={() => {
                     setActiveScenario(scenario);
                   }}
-                  className={`p-3 rounded-lg text-left border transition-all ${
-                    isSelected
+                  className={`p-3 rounded-lg text-left border transition-all ${isSelected
                       ? 'bg-black border-black text-white shadow-md'
                       : 'bg-white border-black/10 text-zinc-700 hover:border-black/30 hover:text-black'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className={`text-[10px] font-mono ${isSelected ? 'text-zinc-400' : 'text-zinc-500'}`}>
                       {scenario.category}
                     </span>
                     <span
-                      className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${
-                        scenario.severity === 'BREAKING'
+                      className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded ${scenario.severity === 'BREAKING'
                           ? isSelected
                             ? 'bg-white text-black font-semibold'
                             : 'bg-black text-white font-semibold'
                           : isSelected
-                          ? 'bg-zinc-800 text-zinc-200 border border-zinc-700'
-                          : 'bg-zinc-100 text-zinc-800 border border-zinc-300'
-                      }`}
+                            ? 'bg-zinc-800 text-zinc-200 border border-zinc-700'
+                            : 'bg-zinc-100 text-zinc-800 border border-zinc-300'
+                        }`}
                     >
                       {scenario.severity}
                     </span>
@@ -498,11 +514,10 @@ export function LandingPage() {
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-semibold text-black">{team.name}</span>
                             <span
-                              className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${
-                                team.blocked
+                              className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${team.blocked
                                   ? 'bg-black text-white'
                                   : 'bg-zinc-200 text-zinc-800 border border-zinc-300'
-                              }`}
+                                }`}
                             >
                               {team.blocked ? 'Blocked' : 'Compatible'}
                             </span>
@@ -532,7 +547,10 @@ export function LandingPage() {
       </section>
 
       {/* ── Architecture Section ── */}
-      <section id="architecture" className="py-16 bg-white border-b border-black/10">
+      <section
+        id="architecture"
+        className="min-h-[calc(100svh-3.5rem)] scroll-mt-14 snap-start py-12 flex flex-col justify-center bg-white border-b border-black/10"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10">
             <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold">+ [02] System architecture</span>
@@ -667,8 +685,45 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* ── Live Contract Flow & Intelligence Bento (InkOrbitFeatures) ── */}
+      <section
+        id="flow"
+        className="min-h-[calc(100svh-3.5rem)] scroll-mt-14 snap-start flex flex-col justify-center border-b border-black/10 bg-white"
+      >
+        <Suspense fallback={<div className="h-96 flex items-center justify-center text-xs font-mono text-zinc-400">Loading contract engine...</div>}>
+          <InkOrbitFeatures
+            theme="light"
+            brand="DIFFER ENGINE"
+            tag="+ [04] Contract pipeline"
+            title="Real-time *Contract*\nIntelligence & Release Gates"
+            collaboration={{
+              title: "Multi-Consumer Contracts",
+              description: "Mobile, Web, and Analytics teams collaborate on schemas in real time, synchronizing contract test suites.",
+            }}
+            reports={{
+              title: "Continuous Audit Logs",
+              description: "Automated Newman test runs and cryptographic SHA-256 compliance certs generated on every spec update.",
+            }}
+            integrations={{
+              title: "Ecosystem Integrations",
+              description: "Connect OpenAPI specs, Postman collections, Prism mock runners, and CI pipelines into one unified gate.",
+              tools: ["OpenAPI", "Postman", "Prism", "Newman"],
+            }}
+            insights={{
+              title: "Drift & Blast Radius Forecast",
+              description: "AST semantic analysis predicts release-over-release breaking change likelihood across registered endpoints.",
+              values: [14, 18, 15, 24, 20, 29, 25, 34, 31, 39, 44, 52],
+              forecastFrom: 8,
+            }}
+          />
+        </Suspense>
+      </section>
+
       {/* ── Role Workspaces ── */}
-      <section id="personas" className="py-16 bg-[#fafafa] border-b border-black/10">
+      <section
+        id="personas"
+        className="min-h-[calc(100svh-3.5rem)] scroll-mt-14 snap-start py-12 flex flex-col justify-center bg-[#fafafa] border-b border-black/10"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold">+ [03] Role-based access</span>
@@ -682,33 +737,30 @@ export function LandingPage() {
             <button
               type="button"
               onClick={() => setSelectedPersona('admin')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-                selectedPersona === 'admin'
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${selectedPersona === 'admin'
                   ? 'bg-black text-white shadow-sm'
                   : 'bg-white text-zinc-700 border border-black/15 hover:text-black'
-              }`}
+                }`}
             >
               API Producer (Admin)
             </button>
             <button
               type="button"
               onClick={() => setSelectedPersona('mobile')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-                selectedPersona === 'mobile'
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${selectedPersona === 'mobile'
                   ? 'bg-black text-white shadow-sm'
                   : 'bg-white text-zinc-700 border border-black/15 hover:text-black'
-              }`}
+                }`}
             >
               Mobile Team Rep
             </button>
             <button
               type="button"
               onClick={() => setSelectedPersona('analytics')}
-              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${
-                selectedPersona === 'analytics'
+              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-colors ${selectedPersona === 'analytics'
                   ? 'bg-black text-white shadow-sm'
                   : 'bg-white text-zinc-700 border border-black/15 hover:text-black'
-              }`}
+                }`}
             >
               Analytics Service Rep
             </button>
@@ -819,6 +871,41 @@ export function LandingPage() {
 
       {/* ── Compact Architectural Footer ── */}
       {/* replaced by StickyFooter inside PageShell — see components/StickyFooter.tsx */}
+
+      {/* ── Floating Section Scroll-Hover Rail ── */}
+      <nav
+        aria-label="Section quick jump"
+        className="hidden lg:flex fixed right-5 top-1/2 -translate-y-1/2 z-40 flex-col items-end gap-2"
+      >
+        {SECTIONS.map((s) => {
+          const isActive = activeSection === s.id;
+          return (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              aria-label={`Jump to ${s.label}`}
+              className="group flex items-center gap-2 py-0.5"
+            >
+              <span
+                className={`pointer-events-none rounded-full border border-black/10 bg-white/90 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-black shadow-sm backdrop-blur-sm transition-all duration-200 ${
+                  isActive
+                    ? 'opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0'
+                    : 'opacity-0 translate-x-1 group-hover:opacity-100 group-hover:translate-x-0'
+                }`}
+              >
+                {s.label}
+              </span>
+              <span
+                className={`block rounded-full border transition-all duration-200 ${
+                  isActive
+                    ? 'h-2.5 w-2.5 border-black bg-black scale-110 ring-2 ring-white/80'
+                    : 'h-2 w-2 border-zinc-400 bg-white/80 group-hover:scale-125 group-hover:border-black group-hover:bg-black'
+                }`}
+              />
+            </a>
+          );
+        })}
+      </nav>
 
       {/* ── Floating Smooth Back-To-Top Button ── */}
       {showBackToTop && (
